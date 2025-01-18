@@ -31,8 +31,9 @@ export class MyApp extends LitElement {
   });
 
   @state()
-  private _droppables: Omit<EdElementData, "children">[] = [
+  private _droppables: Omit<EdElementData & { name: string }, "children">[] = [
     {
+      name: "Flex H",
       tag: "gds-flex",
       attributes: {
         padding: "m",
@@ -41,20 +42,42 @@ export class MyApp extends LitElement {
       },
     },
     {
+      name: "Flex V",
+      tag: "gds-flex",
+      attributes: {
+        padding: "m",
+        gap: "m",
+        "flex-direction": "column",
+      },
+    },
+    {
+      name: "Input",
       tag: "gds-input",
       attributes: {
         label: "Label",
       },
     },
     {
+      name: "Button",
       tag: "gds-button",
       attributes: {},
       text: "Button",
     },
     {
+      name: "Card",
       tag: "gds-card",
       attributes: {
         padding: "m",
+      },
+    },
+    {
+      name: "Text",
+      tag: "gds-text",
+      text: "Heading",
+      attributes: {
+        padding: "m",
+        tag: "h2",
+        contentEditable: "true",
       },
     },
   ];
@@ -84,7 +107,7 @@ export class MyApp extends LitElement {
         >
           ${this._droppables.map(
             (droppable) =>
-              html`<div
+              html`<gds-card
                 draggable="true"
                 @dragstart=${(e: DragEvent) =>
                   e.dataTransfer?.setData(
@@ -92,8 +115,8 @@ export class MyApp extends LitElement {
                     JSON.stringify(droppable),
                   )}
               >
-                ${droppable.tag}
-              </div>`,
+                ${droppable.name}
+              </gds-card>`,
           )}
         </gds-flex>
       </gds-flex>
