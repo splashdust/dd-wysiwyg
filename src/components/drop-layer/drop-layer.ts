@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { EdElement } from "../../app";
+import { customElement, property } from "lit/decorators.js";
+import { EdElement } from "../../ed-element";
 
 type AnchorPosition = "top" | "bottom" | "left" | "right";
 
@@ -49,7 +49,7 @@ export class DropLayer extends LitElement {
     return html` ${this._dropZones.map(
       (dz) => html`
         <div
-          class="drop-zone"
+          class="drop-zone ${dz.anchorPosition}"
           @dragenter=${(e: DragEvent) => e.preventDefault()}
           @dragover=${(e: DragEvent) => e.preventDefault()}
           @drop=${(e: DragEvent) => {
@@ -102,19 +102,38 @@ export class DropLayer extends LitElement {
       width: 100%;
       height: 100%;
       pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.2s;
     }
     :host([isActive]) {
       pointer-events: all;
+      opacity: 1;
     }
 
     .drop-zone {
       position: absolute;
       width: 32px;
       height: 32px;
-      transform: translate(-50%, -50%);
       background-color: rgba(0, 0, 255, 0.5);
       border: 1px dashed rgba(255, 255, 255, 0.8);
       border-radius: 32px;
-      pointer-events: all
+      pointer-events: all;
+    }
+
+    .drop-zone.top {
+      transform: translate(-50%, -50%);
+    }
+
+    .drop-zone.bottom {
+      transform: translate(-50%, -50%);
+    }
+
+    .drop-zone.left {
+      transform: translate(-50%, -50%);
+    }
+
+    .drop-zone.right {
+      transform: translate(-50%, -50%);
+    }
   `;
 }
