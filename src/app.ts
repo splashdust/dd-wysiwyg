@@ -8,7 +8,14 @@ import "@sebgroup/green-core/components/index.js";
 import "./components/drop-layer/drop-layer";
 import type { DropLayer, DropZone } from "./components/drop-layer/drop-layer";
 
-export class EdElement {
+interface EdElementData {
+  tag: string;
+  children: EdElementData[];
+  attributes: Record<string, string>;
+  text?: string;
+}
+
+export class EdElement implements EdElementData {
   tag: string;
   children: EdElement[] = [];
   attributes: Record<string, string>;
@@ -98,6 +105,15 @@ export class EdElement {
     }
 
     return el;
+  }
+
+  serialize(): EdElementData {
+    return {
+      tag: this.tag,
+      attributes: this.attributes,
+      text: this.text,
+      children: this.children.map((child) => child.serialize()),
+    };
   }
 }
 
@@ -219,6 +235,7 @@ export class MyApp extends LitElement {
     this._renderTarget.innerHTML = "";
     this._renderTarget.appendChild(this._document.render());
     this.updateComplete.then(() => {
+      console.log(JSON.stringify(this._document.serialize()));
       this._dropLayer.clear();
       this._dropLayer.buildFromElement(this._document);
     });
