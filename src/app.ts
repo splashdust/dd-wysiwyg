@@ -1,13 +1,13 @@
 import { LitElement, PropertyValues, css } from "lit";
-import { customElement, property, query, state } from "lit/decorators.js";
+import { customElement, query, state } from "lit/decorators.js";
 
-import { html, getScopedTagName } from "@sebgroup/green-core/scoping";
+import { html } from "@sebgroup/green-core/scoping";
 
 import "@sebgroup/green-core/components/index.js";
 
 import "./components/drop-layer/drop-layer";
 import type { DropLayer } from "./components/drop-layer/drop-layer";
-import { EdElement, EdFlexElement } from "./ed-element";
+import { EdElementData, EdFlexElement } from "./ed-element";
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -29,6 +29,35 @@ export class MyApp extends LitElement {
     gap: "m",
     "flex-direction": "column",
   });
+
+  @state()
+  private _droppables: Omit<EdElementData, "children">[] = [
+    {
+      tag: "gds-flex",
+      attributes: {
+        padding: "m",
+        gap: "m",
+        "flex-direction": "row",
+      },
+    },
+    {
+      tag: "gds-input",
+      attributes: {
+        label: "Label",
+      },
+    },
+    {
+      tag: "gds-button",
+      attributes: {},
+      text: "Button",
+    },
+    {
+      tag: "gds-card",
+      attributes: {
+        padding: "m",
+      },
+    },
+  ];
 
   @query("#renderTarget")
   private _renderTarget!: HTMLElement;
@@ -53,66 +82,19 @@ export class MyApp extends LitElement {
           flex-direction="column"
           gap="m"
         >
-          <div
-            draggable="true"
-            @dragstart=${(e: DragEvent) =>
-              e.dataTransfer?.setData(
-                "application/json",
-                JSON.stringify({
-                  tag: "gds-flex",
-                  attributes: {
-                    padding: "m",
-                    gap: "m",
-                    "flex-direction": "row",
-                  },
-                }),
-              )}
-          >
-            Flex
-          </div>
-          <div
-            draggable="true"
-            @dragstart=${(e: DragEvent) =>
-              e.dataTransfer?.setData(
-                "application/json",
-                JSON.stringify({
-                  tag: "gds-input",
-                  attributes: {
-                    label: "Label",
-                  },
-                }),
-              )}
-          >
-            Input
-          </div>
-          <div
-            draggable="true"
-            @dragstart=${(e: DragEvent) =>
-              e.dataTransfer?.setData(
-                "application/json",
-                JSON.stringify({
-                  tag: "gds-button",
-                  text: "Button",
-                }),
-              )}
-          >
-            Button
-          </div>
-          <div
-            draggable="true"
-            @dragstart=${(e: DragEvent) =>
-              e.dataTransfer?.setData(
-                "application/json",
-                JSON.stringify({
-                  tag: "gds-card",
-                  attributes: {
-                    padding: "m",
-                  },
-                }),
-              )}
-          >
-            Card
-          </div>
+          ${this._droppables.map(
+            (droppable) =>
+              html`<div
+                draggable="true"
+                @dragstart=${(e: DragEvent) =>
+                  e.dataTransfer?.setData(
+                    "application/json",
+                    JSON.stringify(droppable),
+                  )}
+              >
+                ${droppable.tag}
+              </div>`,
+          )}
         </gds-flex>
       </gds-flex>
       <drop-layer></drop-layer>`;

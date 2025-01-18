@@ -102,9 +102,10 @@ export class DropLayer extends LitElement {
       width: 100%;
       height: 100%;
       pointer-events: none;
-      opacity: 1;
+      opacity: 0;
       transition: opacity 0.2s;
     }
+
     :host([isActive]) {
       pointer-events: all;
       opacity: 1;

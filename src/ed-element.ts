@@ -102,24 +102,26 @@ export class EdFlexElement extends EdElement {
     const dropZones: DropZone[] = [];
     const flexDirection = this.attributes["flex-direction"] || "row";
 
+    if (!this.renderedElement) return dropZones;
+
     dropZones.push({
-      anchorElement: this.renderedElement as HTMLElement,
+      anchorElement: this.renderedElement,
       anchorPosition: flexDirection == "row" ? "left" : "top",
       onDrop: this.getOnDrop(0),
     });
 
     dropZones.push({
-      anchorElement: this.renderedElement as HTMLElement,
+      anchorElement: this.renderedElement,
       anchorPosition: flexDirection == "row" ? "right" : "bottom",
-      onDrop: this.getOnDrop(0),
+      onDrop: this.getOnDrop(),
     });
 
     this.children.forEach((child, idx) => {
-      if (idx === this.children.length - 1) {
+      if (idx === this.children.length - 1 || !child.renderedElement) {
         return;
       }
       dropZones.push({
-        anchorElement: child.renderedElement as HTMLElement,
+        anchorElement: child.renderedElement,
         anchorPosition: flexDirection === "row" ? "right" : "bottom",
         onDrop: this.getOnDrop(idx + 1),
       });
@@ -137,8 +139,10 @@ export class EdCardElement extends EdElement {
   getDropZones() {
     const dropZones: DropZone[] = [];
 
+    if (!this.renderedElement) return dropZones;
+
     dropZones.push({
-      anchorElement: this.renderedElement as HTMLElement,
+      anchorElement: this.renderedElement,
       anchorPosition: "bottom",
       onDrop: this.getOnDrop(),
     });
