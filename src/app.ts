@@ -183,8 +183,14 @@ export class MyApp extends LitElement {
             this._selectedElement !== null,
             () => html`
               Selected: ${this._selectedElement?.tag}
-              <br/>Attributes:
+                <gds-input label="Text content" value=${this._selectedElement?.text} @input=${(
+                  e,
+                ) => {
+                  this._selectedElement!.text = e.target.value;
+                  this.requestUpdate();
+                }}></gds-input>
                 <gds-textarea
+                    label="Attributes"
                     id="attributes"
                     value=${JSON.stringify(this._selectedElement?.attributes)}
                 /></gds-textarea>
@@ -197,8 +203,19 @@ export class MyApp extends LitElement {
                   this._selectedElement.attributes = changedAttributes;
                   this.requestUpdate();
                 }}
-                >Change</gds-button
-              >
+                >Update element</gds-button>
+
+                <gds-button variant="negative" @click=${(e: Event) => {
+                  if (!this._selectedElement) return;
+                  const index = this._selectedElement.parent?.children.indexOf(
+                    this._selectedElement,
+                  );
+                  if (index !== undefined && index > -1) {
+                    this._selectedElement.parent?.children.splice(index, 1);
+                    this._selectedElement = null;
+                  }
+                  this.requestUpdate();
+                }}>Delete</gds-button>
             `,
           )}
         </gds-flex>

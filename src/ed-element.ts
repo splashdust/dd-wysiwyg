@@ -24,15 +24,21 @@ export class EdElement implements EdElementData {
   attributes: Record<string, string>;
   text?: string;
   renderedElement?: HTMLElement;
+  parent?: EdElement;
 
   constructor(data: Partial<EdElementData>) {
     this.tag = data.tag || "div";
-    this.children = (data.children || []).map((child) => elementFactory(child));
+    this.children = (data.children || []).map((c) => {
+      const child = elementFactory(c);
+      child.parent = this;
+      return child;
+    });
     this.attributes = data.attributes || {};
     this.text = data.text;
   }
 
   addChild(child: EdElement, index?: number) {
+    child.parent = this;
     if (index !== undefined) {
       this.children.splice(index, 0, child);
     } else {
