@@ -8,12 +8,7 @@ import "@sebgroup/green-core/components/dialog/index.js";
 
 import "./components/drop-layer/drop-layer";
 import type { DropLayer } from "./components/drop-layer/drop-layer";
-import {
-  EdElement,
-  EdElementData,
-  EdFlexElement,
-  elementFactory,
-} from "./ed-element";
+import { EdElementData, elementFactory } from "./ed-element";
 import { MarkupGenerator } from "./markup-generator";
 import { GdsTextarea } from "@sebgroup/green-core/components/index.js";
 
