@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@sebgroup/green-core": "^1.62.3",
+    "@shoelace-style/shoelace": "^2.19.1",
     "lit": "^3.2.1"
   },
   "devDependencies": {

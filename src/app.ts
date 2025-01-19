@@ -1,4 +1,4 @@
-import { LitElement, PropertyValues, css } from "lit";
+import { LitElement, PropertyValues, TemplateResult, css } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 
 import { html } from "@sebgroup/green-core/scoping";
@@ -6,11 +6,15 @@ import { html } from "@sebgroup/green-core/scoping";
 import "@sebgroup/green-core/components/index.js";
 import "@sebgroup/green-core/components/dialog/index.js";
 
+import "@shoelace-style/shoelace";
+import "@shoelace-style/shoelace/dist/themes/light.css";
+
 import "./components/drop-layer/drop-layer";
 import type { DropLayer } from "./components/drop-layer/drop-layer";
-import { EdElementData, elementFactory } from "./ed-element";
+import { EdElement, EdElementData, elementFactory } from "./ed-element";
 import { MarkupGenerator } from "./markup-generator";
 import { GdsTextarea } from "@sebgroup/green-core/components/index.js";
+import { when } from "lit/directives/when.js";
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -25,6 +29,10 @@ export class MyApp extends LitElement {
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
+    }
+
+    .tree-with-lines {
+      --indent-guide-width: 1px;
     }
   `;
 
@@ -134,6 +142,8 @@ export class MyApp extends LitElement {
 
   @state() private _generatedMarkup = "";
 
+  @state() private _selectedElement: EdElement | null = null;
+
   @query("#renderTarget")
   private _renderTarget!: HTMLElement;
 
@@ -142,6 +152,9 @@ export class MyApp extends LitElement {
 
   @query("#import-export")
   private _importExport!: GdsTextarea;
+
+  @query("#attributes")
+  private _attributes!: GdsTextarea;
 
   connectedCallback() {
     super.connectedCallback();
@@ -153,6 +166,42 @@ export class MyApp extends LitElement {
 
   render() {
     return html`<gds-flex width="100%" height="100%">
+        <gds-flex
+          flex="0 0 300px"
+          border="0 4xs 0 0"
+          padding="m"
+          flex-direction="column"
+          gap="m"
+        >
+          <gds-text tag="h3">Document properties</gds-text>
+          <gds-divider></gds-divider>
+          <sl-tree class="tree-with-lines">
+            ${this.#renderPropertyTree(this._document)}
+          </sl-tree>
+          <gds-divider></gds-divider>
+          ${when(
+            this._selectedElement !== null,
+            () => html`
+              Selected: ${this._selectedElement?.tag}
+              <br/>Attributes:
+                <gds-textarea
+                    id="attributes"
+                    value=${JSON.stringify(this._selectedElement?.attributes)}
+                /></gds-textarea>
+              <gds-button
+                @click=${() => {
+                  if (!this._selectedElement) return;
+                  const changedAttributes = JSON.parse(
+                    this._attributes.value || "{}",
+                  );
+                  this._selectedElement.attributes = changedAttributes;
+                  this.requestUpdate();
+                }}
+                >Change</gds-button
+              >
+            `,
+          )}
+        </gds-flex>
         <gds-flex flex="0 1 100%">
           <div id="renderTarget"></div>
         </gds-flex>
@@ -214,6 +263,19 @@ export class MyApp extends LitElement {
   protected updated(_changedProperties: PropertyValues): void {
     super.updated(_changedProperties);
     this.#renderDocument();
+  }
+
+  #renderPropertyTree(tree: EdElement): TemplateResult {
+    return html`<sl-tree-item
+      type="folder"
+      @click=${(e: Event) => {
+        if (e.currentTarget !== e.target) return;
+        this._selectedElement = tree;
+      }}
+    >
+      ${tree.tag}
+      ${tree.children.map((child) => this.#renderPropertyTree(child))}
+    </sl-tree-item>`;
   }
 
   #renderDocument() {
