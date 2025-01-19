@@ -2,6 +2,8 @@ import { css, html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { EdElement } from "../../ed-element";
 
+import "@sebgroup/green-core/components/icon/icons/plus-small.js";
+
 type AnchorPosition = "top" | "bottom" | "left" | "right";
 
 export type DropZone = {
@@ -50,18 +52,26 @@ export class DropLayer extends LitElement {
       (dz) => html`
         <div
           class="drop-zone ${dz.anchorPosition}"
-          @dragenter=${(e: DragEvent) => e.preventDefault()}
+          @dragenter=${(e: DragEvent) => {
+            e.preventDefault();
+            (e.target as HTMLElement)?.classList.add("drag-hover");
+          }}
           @dragover=${(e: DragEvent) => e.preventDefault()}
+          @dragleave=${(e: DragEvent) => {
+            (e.target as HTMLElement)?.classList.remove("drag-hover");
+          }}
           @drop=${(e: DragEvent) => {
             e.preventDefault();
-            if (e.currentTarget !== e.target) return;
+            (e.target as HTMLElement)?.classList.remove("drag-hover");
             dz.onDrop(e);
           }}
           style="${this.#positionFromAnchor(
             dz.anchorElement,
             dz.anchorPosition,
           )}"
-        ></div>
+        >
+          <gds-icon-plus-small></gds-icon-plus-small>
+        </div>
       `,
     )}`;
   }
@@ -112,13 +122,34 @@ export class DropLayer extends LitElement {
     }
 
     .drop-zone {
+      dislpay: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 32px;
       position: absolute;
       width: 32px;
       height: 32px;
-      background-color: rgba(0, 0, 255, 0.5);
-      border: 1px dashed rgba(255, 255, 255, 0.8);
+      background-color: rgba(128, 128, 128, 0.5);
+      border: 3px dashed rgba(64, 64, 64, 0.8);
       border-radius: 32px;
       pointer-events: all;
+      transition:
+        width 0.2s,
+        height 0.2s,
+        line-height 0.2s,
+        box-shadow 0.2s;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .drop-zone.drag-hover {
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .drop-zone > * {
+      pointer-events: none;
     }
 
     .drop-zone.top {

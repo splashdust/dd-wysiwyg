@@ -33,19 +33,17 @@ export class MyApp extends LitElement {
   @state()
   private _droppables: Omit<EdElementData & { name: string }, "children">[] = [
     {
-      name: "Flex H",
+      name: "Flex row",
       tag: "gds-flex",
       attributes: {
-        padding: "m",
         gap: "m",
         "flex-direction": "row",
       },
     },
     {
-      name: "Flex V",
+      name: "Flex column",
       tag: "gds-flex",
       attributes: {
-        padding: "m",
         gap: "m",
         "flex-direction": "column",
       },
