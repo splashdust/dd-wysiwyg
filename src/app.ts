@@ -284,6 +284,7 @@ export class MyApp extends LitElement {
   #renderPropertyTree(el: EdElement): TemplateResult {
     return html`<sl-tree-item
       type="folder"
+      .expanded=${el.children.length < 4 ? true : false}
       @click=${(e: Event) => {
         if (e.currentTarget !== e.target) return;
         if (this._selectedElement) {
