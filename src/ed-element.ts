@@ -7,7 +7,7 @@ export interface EdElementData {
   text?: string;
 }
 
-function elementFactory(data: Partial<EdElementData>): EdElement {
+export function elementFactory(data: Partial<EdElementData>): EdElement {
   switch (data.tag) {
     case "gds-flex":
       return new EdFlexElement(data);

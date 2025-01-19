@@ -8,8 +8,14 @@ import "@sebgroup/green-core/components/dialog/index.js";
 
 import "./components/drop-layer/drop-layer";
 import type { DropLayer } from "./components/drop-layer/drop-layer";
-import { EdElementData, EdFlexElement } from "./ed-element";
+import {
+  EdElement,
+  EdElementData,
+  EdFlexElement,
+  elementFactory,
+} from "./ed-element";
 import { MarkupGenerator } from "./markup-generator";
+import { GdsTextarea } from "@sebgroup/green-core/components/index.js";
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -26,13 +32,10 @@ export class MyApp extends LitElement {
   `;
 
   @state()
-  private _document = new EdFlexElement({
+  private _document = elementFactory({
     tag: "gds-flex",
-    attributes: {
-      padding: "m",
-      gap: "m",
-      "flex-direction": "column",
-    },
+    attributes: { padding: "m", gap: "m", "flex-direction": "column" },
+    children: [],
   });
 
   @state()
@@ -138,6 +141,9 @@ export class MyApp extends LitElement {
   @query("drop-layer")
   private _dropLayer!: DropLayer;
 
+  @query("#import-export")
+  private _importExport!: GdsTextarea;
+
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("tree-updated", () => this.requestUpdate());
@@ -181,6 +187,24 @@ export class MyApp extends LitElement {
                 );
               }}
               >Generate HTML</gds-button
+            >
+          </gds-dialog>
+          <gds-dialog
+            heading="Import/export"
+            @gds-close=${(e: CustomEvent) => {
+              if (e.detail === "btn-ok") {
+                this._document = elementFactory(
+                  JSON.parse(this._importExport.value || "{}"),
+                );
+              }
+            }}
+          >
+            <gds-textarea
+              id="import-export"
+              value=${JSON.stringify(this._document.serialize())}
+            ></gds-textarea>
+            <gds-button slot="trigger" @click=${() => {}}
+              >Import/export</gds-button
             >
           </gds-dialog>
         </gds-flex>
