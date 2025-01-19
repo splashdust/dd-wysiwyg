@@ -93,7 +93,6 @@ export class MyApp extends LitElement {
       attributes: {
         padding: "m",
         tag: "h2",
-        contentEditable: "true",
       },
       children: [],
     },
@@ -282,16 +281,19 @@ export class MyApp extends LitElement {
     this.#renderDocument();
   }
 
-  #renderPropertyTree(tree: EdElement): TemplateResult {
+  #renderPropertyTree(el: EdElement): TemplateResult {
     return html`<sl-tree-item
       type="folder"
       @click=${(e: Event) => {
         if (e.currentTarget !== e.target) return;
-        this._selectedElement = tree;
+        if (this._selectedElement) {
+          this._selectedElement.highlighted = false;
+        }
+        this._selectedElement = el;
+        el.highlighted = true;
       }}
     >
-      ${tree.tag}
-      ${tree.children.map((child) => this.#renderPropertyTree(child))}
+      ${el.tag} ${el.children.map((child) => this.#renderPropertyTree(child))}
     </sl-tree-item>`;
   }
 
@@ -299,7 +301,6 @@ export class MyApp extends LitElement {
     this._renderTarget.innerHTML = "";
     this._renderTarget.appendChild(this._document.render());
     this.updateComplete.then(() => {
-      console.log(JSON.stringify(this._document.serialize()));
       this._dropLayer.clear();
       this._dropLayer.buildFromElement(this._document);
     });

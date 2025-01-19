@@ -25,6 +25,7 @@ export class EdElement implements EdElementData {
   text?: string;
   renderedElement?: HTMLElement;
   parent?: EdElement;
+  highlighted = false;
 
   constructor(data: Partial<EdElementData>) {
     this.tag = data.tag || "div";
@@ -83,6 +84,11 @@ export class EdElement implements EdElementData {
 
     if (text) {
       el.textContent = text;
+    }
+
+    if (this.highlighted) {
+      el.style.outline = "1px dotted rgba(128,128,128,0.8)";
+      el.style.outlineOffset = "2px";
     }
 
     if (children) {
