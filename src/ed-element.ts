@@ -7,39 +7,46 @@ export interface EdElementData {
   text?: string;
 }
 
-function elementFactory(tag: string): EdElement {
-  switch (tag) {
+function elementFactory(data: Partial<EdElementData>): EdElement {
+  switch (data.tag) {
     case "gds-flex":
-      return new EdFlexElement();
+      return new EdFlexElement(data);
     case "gds-card":
-      return new EdCardElement();
+      return new EdCardElement(data);
     default:
-      return new EdElement(tag);
+      return new EdElement(data);
   }
 }
 
 export class EdElement implements EdElementData {
   tag: string;
-  children: EdElement[] = [];
+  children: EdElement[];
   attributes: Record<string, string>;
   text?: string;
   renderedElement?: HTMLElement;
 
-  constructor(tag: string, attributes?: Record<string, string>) {
-    this.tag = tag;
-    this.attributes = attributes || {};
+  constructor(data: Partial<EdElementData>) {
+    this.tag = data.tag || "div";
+    this.children = (data.children || []).map((child) => elementFactory(child));
+    this.attributes = data.attributes || {};
+    this.text = data.text;
   }
 
-  addChild(child: EdElement, idx?: number) {
-    if (idx !== undefined) {
-      this.children.splice(idx, 0, child);
+  addChild(child: EdElement, index?: number) {
+    if (index !== undefined) {
+      this.children.splice(index, 0, child);
     } else {
       this.children.push(child);
     }
-    document.dispatchEvent(new Event("tree-updated"));
+
+    if (child.attributes["data-preview"] === "true") {
+      document.dispatchEvent(new Event("preview-tree-updated"));
+    } else {
+      document.dispatchEvent(new Event("tree-updated"));
+    }
   }
 
-  protected getOnDrop(idx?: number) {
+  protected getOnDrop(index?: number) {
     return (e: DragEvent) => {
       const dropData = JSON.parse(
         e.dataTransfer?.getData("application/json") || "{}",
@@ -47,10 +54,9 @@ export class EdElement implements EdElementData {
 
       if (!dropData.tag) return;
 
-      const newElement = elementFactory(dropData.tag);
-      newElement.attributes = dropData.attributes || {};
-      newElement.text = dropData.text;
-      this.addChild(newElement, idx);
+      const newElement = elementFactory(dropData);
+
+      this.addChild(newElement, index);
     };
   }
 
@@ -94,8 +100,31 @@ export class EdElement implements EdElementData {
 }
 
 export class EdFlexElement extends EdElement {
-  constructor(attributes?: Record<string, string>) {
-    super("gds-flex", attributes);
+  constructor(data: Partial<EdElementData>) {
+    super({ ...data, tag: "gds-flex" });
+  }
+
+  getOnPreview(index?: number) {
+    return (e: DragEvent) => {
+      const newElement = elementFactory({ tag: "div" });
+      newElement.attributes = {
+        style: "opacity: 0.5; padding: 8px; border: 1px dashed #000",
+        "data-preview": "true",
+      };
+      newElement.text = "Preview";
+      this.addChild(newElement, index);
+    };
+  }
+
+  getOnDragLeave(index?: number) {
+    return (e: DragEvent) => {
+      console.log("drag leave");
+      // remove all preview elements
+      this.children = this.children.filter(
+        (child) => !child.attributes["data-preview"],
+      );
+      document.dispatchEvent(new Event("preview-tree-updated"));
+    };
   }
 
   getDropZones() {
@@ -108,12 +137,16 @@ export class EdFlexElement extends EdElement {
       anchorElement: this.renderedElement,
       anchorPosition: flexDirection == "row" ? "left" : "top",
       onDrop: this.getOnDrop(0),
+      onDragEnter: this.getOnPreview(0),
+      onDragLeave: this.getOnDragLeave(0),
     });
 
     dropZones.push({
       anchorElement: this.renderedElement,
       anchorPosition: flexDirection == "row" ? "right" : "bottom",
       onDrop: this.getOnDrop(),
+      onDragEnter: this.getOnPreview(),
+      onDragLeave: this.getOnDragLeave(),
     });
 
     this.children.forEach((child, idx) => {
@@ -124,6 +157,8 @@ export class EdFlexElement extends EdElement {
         anchorElement: child.renderedElement,
         anchorPosition: flexDirection === "row" ? "right" : "bottom",
         onDrop: this.getOnDrop(idx + 1),
+        onDragEnter: this.getOnPreview(idx + 1),
+        onDragLeave: this.getOnDragLeave(idx + 1),
       });
     });
 
@@ -132,8 +167,31 @@ export class EdFlexElement extends EdElement {
 }
 
 export class EdCardElement extends EdElement {
-  constructor(attributes?: Record<string, string>) {
-    super("gds-card", attributes);
+  constructor(data: Partial<EdElementData>) {
+    super({ ...data, tag: "gds-card" });
+  }
+
+  getOnPreview() {
+    return (e: DragEvent) => {
+      const newElement = elementFactory({ tag: "div" });
+      newElement.attributes = {
+        style: "opacity: 0.5; padding: 8px; border: 1px dashed #000;",
+        "data-preview": "true",
+      };
+      newElement.text = "Preview";
+      this.addChild(newElement);
+    };
+  }
+
+  getOnDragLeave(index?: number) {
+    return (e: DragEvent) => {
+      console.log("drag leave");
+      // remove all preview elements
+      this.children = this.children.filter(
+        (child) => !child.attributes["data-preview"],
+      );
+      document.dispatchEvent(new Event("preview-tree-updated"));
+    };
   }
 
   getDropZones() {
@@ -145,6 +203,8 @@ export class EdCardElement extends EdElement {
       anchorElement: this.renderedElement,
       anchorPosition: "bottom",
       onDrop: this.getOnDrop(),
+      onDragEnter: this.getOnPreview(),
+      onDragLeave: this.getOnDragLeave(),
     });
 
     return dropZones;

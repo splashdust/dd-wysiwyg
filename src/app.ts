@@ -4,10 +4,12 @@ import { customElement, query, state } from "lit/decorators.js";
 import { html } from "@sebgroup/green-core/scoping";
 
 import "@sebgroup/green-core/components/index.js";
+import "@sebgroup/green-core/components/dialog/index.js";
 
 import "./components/drop-layer/drop-layer";
 import type { DropLayer } from "./components/drop-layer/drop-layer";
 import { EdElementData, EdFlexElement } from "./ed-element";
+import { MarkupGenerator } from "./markup-generator";
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -25,13 +27,16 @@ export class MyApp extends LitElement {
 
   @state()
   private _document = new EdFlexElement({
-    padding: "m",
-    gap: "m",
-    "flex-direction": "column",
+    tag: "gds-flex",
+    attributes: {
+      padding: "m",
+      gap: "m",
+      "flex-direction": "column",
+    },
   });
 
   @state()
-  private _droppables: Omit<EdElementData & { name: string }, "children">[] = [
+  private _droppables: (EdElementData & { name: string })[] = [
     {
       name: "Flex row",
       tag: "gds-flex",
@@ -39,6 +44,7 @@ export class MyApp extends LitElement {
         gap: "m",
         "flex-direction": "row",
       },
+      children: [],
     },
     {
       name: "Flex column",
@@ -47,6 +53,7 @@ export class MyApp extends LitElement {
         gap: "m",
         "flex-direction": "column",
       },
+      children: [],
     },
     {
       name: "Input",
@@ -54,12 +61,14 @@ export class MyApp extends LitElement {
       attributes: {
         label: "Label",
       },
+      children: [],
     },
     {
       name: "Button",
       tag: "gds-button",
       attributes: {},
       text: "Button",
+      children: [],
     },
     {
       name: "Card",
@@ -67,6 +76,7 @@ export class MyApp extends LitElement {
       attributes: {
         padding: "m",
       },
+      children: [],
     },
     {
       name: "Text",
@@ -77,8 +87,50 @@ export class MyApp extends LitElement {
         tag: "h2",
         contentEditable: "true",
       },
+      children: [],
+    },
+    {
+      name: "Divider",
+      tag: "gds-divider",
+      attributes: {},
+      children: [],
+    },
+    {
+      name: "Image",
+      tag: "gds-img",
+      attributes: {
+        src: "https://placehold.co/300x200",
+      },
+      children: [],
+    },
+    {
+      name: "Segmented Control",
+      tag: "gds-segmented-control",
+      attributes: {},
+      children: [
+        {
+          tag: "gds-segment",
+          text: "Segment 1",
+          attributes: {},
+          children: [],
+        },
+        {
+          tag: "gds-segment",
+          text: "Segment 2",
+          attributes: {},
+          children: [],
+        },
+        {
+          tag: "gds-segment",
+          text: "Segment 3",
+          attributes: {},
+          children: [],
+        },
+      ],
     },
   ];
+
+  @state() private _generatedMarkup = "";
 
   @query("#renderTarget")
   private _renderTarget!: HTMLElement;
@@ -89,6 +141,9 @@ export class MyApp extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("tree-updated", () => this.requestUpdate());
+    document.addEventListener("preview-tree-updated", () =>
+      this.#renderPreviewDocument(),
+    );
   }
 
   render() {
@@ -116,6 +171,18 @@ export class MyApp extends LitElement {
                 ${droppable.name}
               </gds-card>`,
           )}
+          <gds-dialog heading="Generated markup">
+            <gds-textarea value=${this._generatedMarkup}></gds-textarea>
+            <gds-button
+              slot="trigger"
+              @click=${() => {
+                this._generatedMarkup = MarkupGenerator.toMarkup(
+                  this._document,
+                );
+              }}
+              >Generate HTML</gds-button
+            >
+          </gds-dialog>
         </gds-flex>
       </gds-flex>
       <drop-layer></drop-layer>`;
@@ -134,5 +201,10 @@ export class MyApp extends LitElement {
       this._dropLayer.clear();
       this._dropLayer.buildFromElement(this._document);
     });
+  }
+
+  #renderPreviewDocument() {
+    this._renderTarget.innerHTML = "";
+    this._renderTarget.appendChild(this._document.render());
   }
 }

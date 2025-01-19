@@ -10,6 +10,8 @@ export type DropZone = {
   anchorElement: HTMLElement;
   anchorPosition: AnchorPosition;
   onDrop: (data: any) => void;
+  onDragEnter?: (data: any) => void;
+  onDragLeave?: (data: any) => void;
 };
 
 @customElement("drop-layer")
@@ -24,9 +26,10 @@ export class DropLayer extends LitElement {
     document.addEventListener("dragstart", () =>
       requestAnimationFrame(() => (this.isActive = true)),
     );
-    document.addEventListener("dragend", () =>
-      requestAnimationFrame(() => (this.isActive = false)),
-    );
+    document.addEventListener("dragend", () => {
+      requestAnimationFrame(() => (this.isActive = false));
+      document.dispatchEvent(new Event("tree-updated"));
+    });
   }
 
   #addDropZone(dz: DropZone) {
@@ -53,16 +56,21 @@ export class DropLayer extends LitElement {
         <div
           class="drop-zone ${dz.anchorPosition}"
           @dragenter=${(e: DragEvent) => {
-            e.preventDefault();
+            console.log(e.dataTransfer?.getData("application/json"));
+            requestAnimationFrame(() => dz.onDragEnter?.(e));
             (e.target as HTMLElement)?.classList.add("drag-hover");
           }}
-          @dragover=${(e: DragEvent) => e.preventDefault()}
+          @dragover=${(e: DragEvent) => {
+            e.preventDefault();
+          }}
           @dragleave=${(e: DragEvent) => {
+            dz.onDragLeave?.(e);
             (e.target as HTMLElement)?.classList.remove("drag-hover");
           }}
           @drop=${(e: DragEvent) => {
             e.preventDefault();
             (e.target as HTMLElement)?.classList.remove("drag-hover");
+            dz.onDragLeave?.(e);
             dz.onDrop(e);
           }}
           style="${this.#positionFromAnchor(
