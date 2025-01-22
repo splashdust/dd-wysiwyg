@@ -255,7 +255,7 @@ app.post("/api/generate", async (c) => {
     messages: [
       {
         role: "system",
-        content: `You are a an advanced AI layout generator. Layouts are defined in a JSON format defined by the supplied schema. Unless otherwise constrained by the schema, assume layouts follows the same logic as HTML/CSS. Generate an optimal layout based on the user input.`,
+        content: `You are a an advanced AI layout generator. Layouts are defined in a JSON format defined by the supplied schema. Assume layouts follows the same logic as HTML/CSS, unless otherwise constrained by the schema. When using cards, prefer to wrap the inner content in a flex container. Generate an optimal layout based on the user input.`,
       },
       {
         role: "user",
