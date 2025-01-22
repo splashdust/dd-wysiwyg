@@ -78,6 +78,34 @@ const schema = {
               attributes: { $ref: "#/definitions/badgeAttributes" },
             },
           },
+          {
+            properties: {
+              tag: { const: "gds-segmented-control" },
+              attributes: { $ref: "#/definitions/segmentedControlAttributes" },
+              children: {
+                type: "array",
+                description:
+                  "gds-segmented-control can only have gds-segment children.",
+                items: {
+                  type: "object",
+                  properties: {
+                    tag: {
+                      type: "string",
+                      enum: ["gds-segment"],
+                    },
+                  },
+                  required: ["tag"],
+                  additionalProperties: true,
+                },
+              },
+            },
+          },
+          {
+            properties: {
+              tag: { const: "gds-segment" },
+              attributes: { $ref: "#/definitions/segmentAttributes" },
+            },
+          },
         ],
       },
     },
@@ -237,6 +265,30 @@ const schema = {
           },
         },
         required: ["variant"],
+        additionalProperties: false,
+      },
+      segmentedControlAttributes: {
+        type: "object",
+        description: "Attributes specific to segmented control components.",
+        properties: {
+          value: {
+            type: ["string", "null"],
+            description: "The value of the selected segment.",
+          },
+        },
+        required: ["value"],
+        additionalProperties: false,
+      },
+      segmentAttributes: {
+        type: "object",
+        description: "Attributes specific to text components.",
+        properties: {
+          value: {
+            type: "string",
+            description: "The value of the segment.",
+          },
+        },
+        required: ["value"],
         additionalProperties: false,
       },
     },
