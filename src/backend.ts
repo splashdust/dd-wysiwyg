@@ -296,8 +296,6 @@ const schema = {
   strict: true,
 };
 
-// Here is an example of a layout you can generate: {"tag":"gds-flex","attributes":{"padding":"m","gap":"m","flex-direction":"column"},"children":[{"tag":"gds-card","attributes":{"variant":"secondary","border-color":"secondary","padding":"m","shadow":"xl"},"children":[{"tag":"gds-flex","attributes":{"gap":"m","flex-direction":"column"},"children":[{"tag":"gds-text","attributes":{"padding":"m","tag":"h1","contentEditable":"true"},"text":"Form heading","children":[]},{"tag":"gds-divider","attributes":{"color":"primary"},"children":[]},{"tag":"gds-segmented-control","attributes":{},"children":[{"tag":"gds-segment","attributes":{},"text":"Segment 1","children":[]},{"tag":"gds-segment","attributes":{},"text":"Segment 2","children":[]},{"tag":"gds-segment","attributes":{},"text":"Segment 3","children":[]}]},{"tag":"gds-divider","attributes":{"color":"primary"},"children":[]},{"tag":"gds-flex","attributes":{"gap":"m","flex-direction":"row"},"children":[{"tag":"gds-input","attributes":{"label":"Label"},"children":[]}]},{"tag":"gds-flex","attributes":{"gap":"m","flex-direction":"row"},"children":[{"tag":"gds-input","attributes":{"label":"Label"},"children":[]},{"tag":"gds-input","attributes":{"label":"Label"},"children":[]}]},{"tag":"gds-input","attributes":{"label":"Label"},"children":[]},{"tag":"gds-divider","attributes":{"color":"primary"},"children":[]},{"tag":"gds-flex","attributes":{"gap":"m","flex-direction":"row"},"children":[{"tag":"gds-button","attributes":{},"text":"Button","children":[]},{"tag":"gds-button","attributes":{"rank":"secondary"},"text":"Button","children":[]}]}]}]}]}
-
 app.post("/api/generate", async (c) => {
   const body = await c.req.json();
   console.log(body);
