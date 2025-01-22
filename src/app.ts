@@ -264,15 +264,16 @@ export class MyApp extends LitElement {
                     }
                   }}
                 >
-                  <gds-input
+                  <gds-textarea
                     label="Generate"
                     name="generate"
                     @keydown=${(e: KeyboardEvent) => {
-                      if (e.key === "Enter") {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
                         (e.target as any).form.requestSubmit();
                       }
                     }}
-                  ></gds-input>
+                  ></gds-textarea>
                 </form>
               </gds-flex>`,
           )}
