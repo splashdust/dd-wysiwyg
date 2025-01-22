@@ -306,7 +306,7 @@ export class MyApp extends LitElement {
                   this._document,
                 );
               }}
-              >Generate HTML</gds-button
+              >Export HTML</gds-button
             >
           </gds-dialog>
           <gds-dialog
@@ -324,7 +324,7 @@ export class MyApp extends LitElement {
               value=${JSON.stringify(this._document.serialize())}
             ></gds-textarea>
             <gds-button slot="trigger" @click=${() => {}}
-              >Import/export</gds-button
+              >Import/export JSON</gds-button
             >
           </gds-dialog>
         </gds-flex>

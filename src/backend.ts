@@ -66,6 +66,18 @@ const schema = {
               attributes: { $ref: "#/definitions/dividerAttributes" },
             },
           },
+          {
+            properties: {
+              tag: { const: "gds-text" },
+              attributes: { $ref: "#/definitions/textAttributes" },
+            },
+          },
+          {
+            properties: {
+              tag: { const: "gds-badge" },
+              attributes: { $ref: "#/definitions/badgeAttributes" },
+            },
+          },
         ],
       },
     },
@@ -98,9 +110,30 @@ const schema = {
           "tertiary",
           "positive",
           "negative",
+          "notice",
+          "warning",
+          "information",
+          "copper-01",
+          "copper-02",
+          "purple-01",
+          "purple-02",
+          "green-01",
+          "green-02",
+          "blue-01",
+          "blue-02",
           "null",
         ],
         description: "Allowed token values for colors.",
+      },
+      buttonRanks: {
+        type: "string",
+        enum: ["primary", "secondary", "tertiary"],
+        description: "Allowed ranks values for buttons.",
+      },
+      buttonVariants: {
+        type: "string",
+        enum: ["neutral", "positive", "negative", "null"],
+        description: "Allowed ranks values for buttons.",
       },
       commonAttributes: {
         type: "object",
@@ -115,6 +148,9 @@ const schema = {
           padding: {
             $ref: "#/definitions/tokenValues",
           },
+          margin: {
+            $ref: "#/definitions/tokenValues",
+          },
           gap: {
             $ref: "#/definitions/tokenValues",
           },
@@ -123,16 +159,21 @@ const schema = {
             description: "Direction of flex items.",
           },
         },
-        required: ["padding", "gap", "flex-direction"],
+        required: ["padding", "margin", "gap", "flex-direction"],
         additionalProperties: false,
       },
       buttonAttributes: {
         type: "object",
         description: "Attributes specific to button components.",
         properties: {
-          rank: { type: "string", description: "Rank of the button." },
+          rank: {
+            $ref: "#/definitions/buttonRanks",
+          },
+          variant: {
+            $ref: "#/definitions/buttonVariants",
+          },
         },
-        required: ["rank"],
+        required: ["rank", "variant"],
         additionalProperties: false,
       },
       cardAttributes: {
@@ -170,6 +211,32 @@ const schema = {
           },
         },
         required: ["color"],
+        additionalProperties: false,
+      },
+      textAttributes: {
+        type: "object",
+        description: "Attributes specific to text components.",
+        properties: {
+          tag: {
+            enum: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
+            description: "Create a heading or paragraph.",
+          },
+          color: {
+            $ref: "#/definitions/colorValues",
+          },
+        },
+        required: ["tag", "color"],
+        additionalProperties: false,
+      },
+      badgeAttributes: {
+        type: "object",
+        description: "Attributes specific to text components.",
+        properties: {
+          variant: {
+            $ref: "#/definitions/colorValues",
+          },
+        },
+        required: ["variant"],
         additionalProperties: false,
       },
     },
