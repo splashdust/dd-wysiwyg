@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "node --env-file .env --experimental-transform-types src/backend.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
