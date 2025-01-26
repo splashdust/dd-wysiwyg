@@ -5,6 +5,7 @@ import { html } from "@sebgroup/green-core/scoping";
 
 import "@sebgroup/green-core/components/index.js";
 import "@sebgroup/green-core/components/dialog/index.js";
+import "@sebgroup/green-core/components/rich-text/index.js";
 
 import "./components/drop-layer";
 import type { DropLayer } from "./components/drop-layer";

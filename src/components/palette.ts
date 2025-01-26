@@ -53,9 +53,14 @@ export class Palette extends LitElement {
       tag: "gds-text",
       text: "Heading",
       attributes: {
-        padding: "m",
         tag: "h2",
       },
+      children: [],
+    },
+    {
+      name: "RichText",
+      tag: "gds-rich-text",
+      attributes: {},
       children: [],
     },
     {

@@ -1,7 +1,9 @@
 import { SignalArray } from "signal-utils/array";
+import { SignalObject } from "signal-utils/object";
 import { signal, computed, Signal } from "@lit-labs/signals";
 
 import type { DropZone } from "./components/drop-layer";
+import { html } from "@sebgroup/green-core/scoping";
 
 export interface EdElementData {
   tag: string;
@@ -16,6 +18,10 @@ export function elementFactory(data: Partial<EdElementData>): EdElement {
       return new EdFlexElement(data);
     case "gds-card":
       return new EdCardElement(data);
+    case "gds-button":
+      return new EdButtonElement(data);
+    case "gds-rich-text":
+      return new EdRichTextElement(data);
     default:
       return new EdElement(data);
   }
@@ -38,7 +44,7 @@ export class EdElement implements EdElementData {
     this.#children.set(value);
   }
 
-  #attributes: Signal.State<Record<string, string>> = signal({});
+  #attributes = signal(new SignalObject<Record<string, string>>({}));
   get attributes() {
     return this.#attributes.get();
   }
@@ -155,6 +161,26 @@ export class EdElement implements EdElementData {
       children: this.children.map((child) => child.serialize()),
     };
   }
+
+  renderPropertyPanel() {
+    return html`<gds-input label="Text content" value=${this.text} @input=${(
+      e: any,
+    ) => {
+      this.text = e.target.value;
+    }}></gds-input>
+    <gds-textarea
+        label="Attributes"
+        id="attributes"
+        value=${JSON.stringify(this.attributes)}
+        @input=${(e: InputEvent) => {
+          try {
+            this.attributes = JSON.parse((e.target as any)?.value || "{}");
+          } catch (e) {
+            // ignore
+          }
+        }}
+    /></gds-textarea>`;
+  }
 }
 
 export class EdFlexElement extends EdElement {
@@ -221,6 +247,35 @@ export class EdFlexElement extends EdElement {
 
     return dropZones;
   }
+
+  renderPropertyPanel() {
+    return html`
+    <gds-dropdown
+        size="small"
+        label="Flex direction"
+        value=${this.attributes["flex-direction"] || "row"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            "flex-direction": e.target.value,
+          };
+        }}>
+        <gds-option value="row">Row</gds-option>
+        <gds-option value="column">Column</gds-option>
+    </gds-dropdown>
+    <gds-textarea
+        label="Attributes"
+        id="attributes"
+        value=${JSON.stringify(this.attributes)}
+        @input=${(e: InputEvent) => {
+          try {
+            this.attributes = JSON.parse((e.target as any)?.value || "{}");
+          } catch (e) {
+            // ignore
+          }
+        }}
+    /></gds-textarea>`;
+  }
 }
 
 export class EdCardElement extends EdElement {
@@ -264,5 +319,50 @@ export class EdCardElement extends EdElement {
     });
 
     return dropZones;
+  }
+}
+
+export class EdButtonElement extends EdElement {
+  constructor(data: Partial<EdElementData>) {
+    super({ ...data, tag: "gds-button" });
+  }
+
+  renderPropertyPanel() {
+    return html` <gds-dropdown
+        size="small"
+        label="Rank"
+        value=${this.attributes["rank"] || "primary"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            rank: e.target.value,
+          };
+        }}
+      >
+        <gds-option value="primary">Primary</gds-option>
+        <gds-option value="secondary">Secondary</gds-option>
+        <gds-option value="tertiary">Tertiary</gds-option>
+      </gds-dropdown>
+      <gds-dropdown
+        size="small"
+        label="Variant"
+        value=${this.attributes["variant"] || "neutral"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            variant: e.target.value,
+          };
+        }}
+      >
+        <gds-option value="neutral">Neutral</gds-option>
+        <gds-option value="positive">Positive</gds-option>
+        <gds-option value="negative">Negative</gds-option>
+      </gds-dropdown>`;
+  }
+}
+
+export class EdRichTextElement extends EdElement {
+  constructor(data: Partial<EdElementData>) {
+    super({ ...data, tag: "gds-rich-text" });
   }
 }

@@ -36,45 +36,38 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
         ${when(
           this._selectedElement !== null,
           () => html`
-              Selected: ${this._selectedElement?.tag}
-                <gds-input label="Text content" value=${this._selectedElement?.text} @input=${(
-                  e: any,
-                ) => {
-                  this._selectedElement!.text = e.target.value;
-                  this.requestUpdate();
-                }}></gds-input>
-                <gds-textarea
-                    label="Attributes"
-                    id="attributes"
-                    value=${JSON.stringify(this._selectedElement?.attributes)}
-                /></gds-textarea>
-              <gds-button
-                @click=${() => {
-                  if (!this._selectedElement) return;
-                  const changedAttributes = JSON.parse(
-                    this._attributes.value || "{}",
-                  );
-                  this._selectedElement.attributes = changedAttributes;
-                  this.requestUpdate();
-                }}
-                >Update element</gds-button>
+            Selected: ${this._selectedElement?.tag}
+            ${this._selectedElement?.renderPropertyPanel()}
 
-                <gds-button variant="negative" @click=${(e: Event) => {
-                  if (!this._selectedElement) return;
-                  const index = this._selectedElement.parent?.children.indexOf(
-                    this._selectedElement,
-                  );
-                  if (index !== undefined && index > -1) {
-                    this._selectedElement.parent?.children.splice(index, 1);
-                    this._selectedElement = null;
-                  }
-                  this.requestUpdate();
-                }}>Delete</gds-button>
-            `,
+            <gds-button variant="negative" @click=${this.#deleteSelectedElement}
+              >Delete</gds-button
+            >
+          `,
         )}
       </gds-flex>
     `;
   }
+
+  #updateSelectedElementAttributes = () => {
+    if (!this._selectedElement) return;
+    try {
+      const changedAttributes = JSON.parse(this._attributes.value || "{}");
+      this._selectedElement.attributes = changedAttributes;
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  #deleteSelectedElement = () => {
+    if (!this._selectedElement) return;
+    const index = this._selectedElement.parent?.children.indexOf(
+      this._selectedElement,
+    );
+    if (index !== undefined && index > -1) {
+      this._selectedElement.parent?.children.splice(index, 1);
+      this._selectedElement = null;
+    }
+  };
 
   #renderPropertyTree(el: EdElement): TemplateResult {
     return html`<sl-tree-item
