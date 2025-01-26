@@ -1,4 +1,7 @@
-import type { DropZone } from "./components/drop-layer/drop-layer";
+import { SignalArray } from "signal-utils/array";
+import { signal, computed, Signal } from "@lit-labs/signals";
+
+import type { DropZone } from "./components/drop-layer";
 
 export interface EdElementData {
   tag: string;
@@ -19,21 +22,58 @@ export function elementFactory(data: Partial<EdElementData>): EdElement {
 }
 
 export class EdElement implements EdElementData {
-  tag: string;
-  children: EdElement[];
-  attributes: Record<string, string>;
-  text?: string;
+  #tag = signal<string>("");
+  get tag() {
+    return this.#tag.get();
+  }
+  set tag(value: string) {
+    this.#tag.set(value);
+  }
+
+  #children = signal(new SignalArray<EdElement>([]));
+  get children() {
+    return this.#children.get();
+  }
+  set children(value: SignalArray<EdElement>) {
+    this.#children.set(value);
+  }
+
+  #attributes: Signal.State<Record<string, string>> = signal({});
+  get attributes() {
+    return this.#attributes.get();
+  }
+  set attributes(value: Record<string, string>) {
+    this.#attributes.set(value);
+  }
+
+  #text = signal<string | undefined>(undefined);
+  get text() {
+    return this.#text.get();
+  }
+  set text(value: string | undefined) {
+    this.#text.set(value);
+  }
+
+  #highlighted = signal(false);
+  get highlighted() {
+    return this.#highlighted.get();
+  }
+  set highlighted(value: boolean) {
+    this.#highlighted.set(value);
+  }
+
   renderedElement?: HTMLElement;
   parent?: EdElement;
-  highlighted = false;
 
   constructor(data: Partial<EdElementData>) {
     this.tag = data.tag || "div";
-    this.children = (data.children || []).map((c) => {
-      const child = elementFactory(c);
-      child.parent = this;
-      return child;
-    });
+    this.children = SignalArray.from(
+      (data.children || []).map((c) => {
+        const child = elementFactory(c);
+        child.parent = this;
+        return child;
+      }),
+    );
     this.attributes = data.attributes || {};
     this.text = data.text;
   }
@@ -101,6 +141,12 @@ export class EdElement implements EdElementData {
     return el;
   }
 
+  hasPreviewElements(): Boolean {
+    return this.children.some(
+      (child) => child.attributes["data-preview"] || child.hasPreviewElements(),
+    );
+  }
+
   serialize(): EdElementData {
     return {
       tag: this.tag,
@@ -132,10 +178,9 @@ export class EdFlexElement extends EdElement {
     return (e: DragEvent) => {
       console.log("drag leave");
       // remove all preview elements
-      this.children = this.children.filter(
-        (child) => !child.attributes["data-preview"],
+      this.children = SignalArray.from(
+        this.children.filter((child) => !child.attributes["data-preview"]),
       );
-      document.dispatchEvent(new Event("preview-tree-updated"));
     };
   }
 
@@ -199,10 +244,9 @@ export class EdCardElement extends EdElement {
     return (e: DragEvent) => {
       console.log("drag leave");
       // remove all preview elements
-      this.children = this.children.filter(
-        (child) => !child.attributes["data-preview"],
+      this.children = SignalArray.from(
+        this.children.filter((child) => !child.attributes["data-preview"]),
       );
-      document.dispatchEvent(new Event("preview-tree-updated"));
     };
   }
 

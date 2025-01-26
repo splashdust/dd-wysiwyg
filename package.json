@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
-    "@sebgroup/green-core": "^1.62.3",
+    "@lit-labs/signals": "^0.1.1",
+    "@sebgroup/green-core": "^1.63.0",
     "@shoelace-style/shoelace": "^2.19.1",
     "hono": "^4.6.17",
     "lit": "^3.2.1",
-    "openai": "^4.79.3"
+    "openai": "^4.79.3",
+    "signal-utils": "^0.21.1"
   },
   "devDependencies": {
     "typescript": "~5.6.2",
