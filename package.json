@@ -16,6 +16,7 @@
     "@shoelace-style/shoelace": "^2.19.1",
     "hono": "^4.6.17",
     "lit": "^3.2.1",
+    "marked": "^15.0.6",
     "openai": "^4.79.3",
     "signal-utils": "^0.21.1"
   },

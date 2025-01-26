@@ -2,6 +2,8 @@ import { SignalArray } from "signal-utils/array";
 import { SignalObject } from "signal-utils/object";
 import { signal, computed, Signal } from "@lit-labs/signals";
 
+import { marked } from "marked";
+
 import type { DropZone } from "./components/drop-layer";
 import { html } from "@sebgroup/green-core/scoping";
 
@@ -364,5 +366,26 @@ export class EdButtonElement extends EdElement {
 export class EdRichTextElement extends EdElement {
   constructor(data: Partial<EdElementData>) {
     super({ ...data, tag: "gds-rich-text" });
+  }
+
+  render() {
+    const el = super.render();
+    if (this.text) {
+      const rendered = marked.parse(this.text as string) as string;
+      console.log("render", rendered, el);
+      requestAnimationFrame(() => (el.innerHTML = rendered));
+    }
+    return el;
+  }
+
+  renderPropertyPanel() {
+    return html`
+        <gds-textarea
+            label="Content (Markdown)"
+            value=${this.text}
+            @input=${(e: InputEvent) => {
+              this.text = (e.target as any)?.value || "";
+            }}
+        /></gds-textarea>`;
   }
 }
