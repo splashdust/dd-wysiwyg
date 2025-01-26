@@ -371,9 +371,9 @@ export class EdRichTextElement extends EdElement {
   render() {
     const el = super.render();
     if (this.text) {
-      const rendered = marked.parse(this.text as string) as string;
-      console.log("render", rendered, el);
-      requestAnimationFrame(() => (el.innerHTML = rendered));
+      requestAnimationFrame(
+        () => (el.innerHTML = marked.parse(this.text as string) as string),
+      );
     }
     return el;
   }
