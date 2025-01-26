@@ -23,7 +23,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
 
   render() {
     return html`
-      <gds-flex flex-direction="column" align-items="stretch" gap="m">
+      <gds-flex flex-direction="column" align-items="stretch">
         <gds-text tag="h3" padding="s">Document properties</gds-text>
         <gds-divider></gds-divider>
         <div style="max-height: 40vh; overflow: auto">
@@ -32,7 +32,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
           </sl-tree>
         </div>
         <gds-divider></gds-divider>
-        <gds-flex padding="0 m" flex-direction="column" gap="m">
+        <gds-flex padding="m" flex-direction="column" gap="m">
           ${when(
             this._selectedElement !== null,
             () => html`
