@@ -74,6 +74,12 @@ const schema = {
           },
           {
             properties: {
+              tag: { const: "gds-rich-text" },
+              attributes: { $ref: "#/definitions/richTextAttributes" },
+            },
+          },
+          {
+            properties: {
               tag: { const: "gds-badge" },
               attributes: { $ref: "#/definitions/badgeAttributes" },
             },
@@ -254,6 +260,14 @@ const schema = {
           },
         },
         required: ["tag", "color"],
+        additionalProperties: false,
+      },
+      richTextAttributes: {
+        type: "object",
+        description:
+          "Attributes specific to rich-text components. Rich text accepts Markdown content in the text property.",
+        properties: {},
+        required: [],
         additionalProperties: false,
       },
       badgeAttributes: {
