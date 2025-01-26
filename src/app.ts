@@ -51,7 +51,6 @@ export class MyApp extends SignalWatcher(LitElement) {
         <gds-flex
           flex="0 0 300px"
           border="0 4xs 0 0"
-          padding="m"
           flex-direction="column"
           align-items="stretch"
           gap="m"

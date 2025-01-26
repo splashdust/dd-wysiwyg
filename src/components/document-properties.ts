@@ -4,12 +4,14 @@ import { customElement, query, state } from "lit/decorators.js";
 import { SignalWatcher } from "@lit-labs/signals";
 import { EdElement } from "../ed-element";
 import { GdsTextarea } from "@sebgroup/green-core/components/textarea/index.js";
+import { when } from "lit/directives/when.js";
+import { edDocument } from "../app";
 
 import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import "@shoelace-style/shoelace/dist/themes/light.css";
-import { when } from "lit/directives/when.js";
-import { edDocument } from "../app";
+
+import "@sebgroup/green-core/components/icon/icons/trash-can.js";
 
 @customElement("document-properties")
 export class DocumentProperties extends SignalWatcher(LitElement) {
@@ -21,29 +23,44 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
 
   render() {
     return html`
-      <gds-flex
-        padding="m"
-        flex-direction="column"
-        align-items="stretch"
-        gap="m"
-      >
-        <gds-text tag="h3">Document properties</gds-text>
+      <gds-flex flex-direction="column" align-items="stretch" gap="m">
+        <gds-text tag="h3" padding="s">Document properties</gds-text>
         <gds-divider></gds-divider>
-        <sl-tree class="tree-with-lines">
-          ${this.#renderPropertyTree(edDocument.root)}
-        </sl-tree>
+        <div style="max-height: 40vh; overflow: auto">
+          <sl-tree class="tree-with-lines">
+            ${this.#renderPropertyTree(edDocument.root)}
+          </sl-tree>
+        </div>
         <gds-divider></gds-divider>
-        ${when(
-          this._selectedElement !== null,
-          () => html`
-            Selected: ${this._selectedElement?.tag}
-            ${this._selectedElement?.renderPropertyPanel()}
+        <gds-flex padding="0 m" flex-direction="column" gap="m">
+          ${when(
+            this._selectedElement !== null,
+            () => html`
+              <gds-card padding="s">
+                Selected:
+                <gds-badge>
+                  <pre>&lt;${this._selectedElement?.tag}&gt;</pre>
+                </gds-badge>
+              </gds-card>
 
-            <gds-button variant="negative" @click=${this.#deleteSelectedElement}
-              >Delete</gds-button
-            >
-          `,
-        )}
+              ${this._selectedElement?.renderPropertyPanel()}
+
+              <gds-divider color="primary"></gds-divider>
+
+              <gds-card variant="negative">
+                <gds-flex flex-direction="column">
+                  <gds-button
+                    variant="negative"
+                    @click=${this.#deleteSelectedElement}
+                  >
+                    Delete element
+                    <gds-icon-trash-can slot="trail"></gds-icon-trash-can>
+                  </gds-button>
+                </gds-flex>
+              </gds-card>
+            `,
+          )}
+        </gds-flex>
       </gds-flex>
     `;
   }
