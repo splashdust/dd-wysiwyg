@@ -44,6 +44,12 @@ const schema = {
           },
           {
             properties: {
+              tag: { const: "gds-grid" },
+              attributes: { $ref: "#/definitions/gridAttributes" },
+            },
+          },
+          {
+            properties: {
               tag: { const: "gds-button" },
               attributes: { $ref: "#/definitions/buttonAttributes" },
             },
@@ -196,6 +202,27 @@ const schema = {
         required: ["padding", "margin", "gap", "flex-direction"],
         additionalProperties: false,
       },
+      gridAttributes: {
+        type: "object",
+        description: "Attributes common to flex containers.",
+        properties: {
+          padding: {
+            $ref: "#/definitions/tokenValues",
+          },
+          margin: {
+            $ref: "#/definitions/tokenValues",
+          },
+          gap: {
+            $ref: "#/definitions/tokenValues",
+          },
+          columns: {
+            type: "integer",
+            description: "Number of columns in the grid.",
+          }
+        },
+        required: ["padding", "margin", "gap", "columns"],
+        additionalProperties: false,
+      },
       buttonAttributes: {
         type: "object",
         description: "Attributes specific to button components.",
@@ -255,11 +282,8 @@ const schema = {
             enum: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
             description: "Create a heading or paragraph.",
           },
-          color: {
-            $ref: "#/definitions/colorValues",
-          },
         },
-        required: ["tag", "color"],
+        required: ["tag"],
         additionalProperties: false,
       },
       richTextAttributes: {
