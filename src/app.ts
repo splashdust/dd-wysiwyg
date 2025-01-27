@@ -15,13 +15,16 @@ import "./components/document-properties";
 import "./components/ai-generate";
 import "./components/import-export";
 
-import { elementFactory } from "./ed-element";
+import { EdElement, EdElementData, elementFactory } from "./ed-element";
 
 import { SignalWatcher } from "@lit-labs/signals";
 import { SignalObject } from "signal-utils/object";
 import { effect } from "signal-utils/subtle/microtask-effect";
 
 export const edDocument = new SignalObject({
+  mutationMeta: {
+    storeHistory: false,
+  },
   root: elementFactory({
     tag: "gds-flex",
     attributes: { padding: "m", gap: "m", "flex-direction": "column" },
@@ -37,12 +40,19 @@ export class MyApp extends SignalWatcher(LitElement) {
   @query("drop-layer")
   private _dropLayer!: DropLayer;
 
+  #history: EdElementData[] = [edDocument.root.serialize()];
+
   connectedCallback() {
     super.connectedCallback();
     this.updateComplete.then(() => {
       effect(() => {
         this.#renderDocument();
       });
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "z" && (e.ctrlKey || e.metaKey)) {
+        this.#undo();
+      }
     });
   }
 
@@ -79,11 +89,28 @@ export class MyApp extends SignalWatcher(LitElement) {
     this._renderTarget.innerHTML = "";
     this._renderTarget.appendChild(edDocument.root.render());
     this.updateComplete.then(() => {
-      if (!edDocument.root.hasPreviewElements()) {
-        this._dropLayer.clear();
-        this._dropLayer.buildFromElement(edDocument.root);
-      }
+      requestAnimationFrame(() => {
+        if (!edDocument.root.hasPreviewElements()) {
+          this._dropLayer.clear();
+          this._dropLayer.buildFromElement(edDocument.root);
+          if (edDocument.mutationMeta.storeHistory) {
+            this.#history.push(edDocument.root.serialize());
+            edDocument.mutationMeta.storeHistory = false;
+          }
+        }
+      });
     });
+  }
+
+  #undo() {
+    console.log(this.#history);
+    if (this.#history.length > 0) {
+      this.#history.pop();
+      edDocument.root = elementFactory(
+        this.#history.pop() || edDocument.root.serialize(),
+      );
+      edDocument.mutationMeta.storeHistory = true;
+    }
   }
 
   static styles = css`

@@ -83,6 +83,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
     if (index !== undefined && index > -1) {
       this._selectedElement.parent?.children.splice(index, 1);
       this._selectedElement = null;
+      edDocument.mutationMeta.storeHistory = true;
     }
   };
 

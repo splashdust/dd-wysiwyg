@@ -6,6 +6,7 @@ import { marked } from "marked";
 
 import type { DropZone } from "./components/drop-layer";
 import { html } from "@sebgroup/green-core/scoping";
+import { edDocument } from "./app";
 
 export interface EdElementData {
   tag: string;
@@ -94,10 +95,8 @@ export class EdElement implements EdElementData {
       this.children.push(child);
     }
 
-    if (child.attributes["data-preview"] === "true") {
-      document.dispatchEvent(new Event("preview-tree-updated"));
-    } else {
-      document.dispatchEvent(new Event("tree-updated"));
+    if (!(child.attributes["data-preview"] === "true")) {
+      edDocument.mutationMeta.storeHistory = true;
     }
   }
 
@@ -169,6 +168,7 @@ export class EdElement implements EdElementData {
       e: any,
     ) => {
       this.text = e.target.value;
+      edDocument.mutationMeta.storeHistory = true;
     }}></gds-input>
     <gds-textarea
         label="Attributes"
@@ -177,6 +177,7 @@ export class EdElement implements EdElementData {
         @input=${(e: InputEvent) => {
           try {
             this.attributes = JSON.parse((e.target as any)?.value || "{}");
+            edDocument.mutationMeta.storeHistory = true;
           } catch (e) {
             // ignore
           }
@@ -261,6 +262,7 @@ export class EdFlexElement extends EdElement {
             ...this.attributes,
             "flex-direction": e.target.value,
           };
+          edDocument.mutationMeta.storeHistory = true;
         }}>
         <gds-option value="row">Row</gds-option>
         <gds-option value="column">Column</gds-option>
@@ -272,6 +274,7 @@ export class EdFlexElement extends EdElement {
         @input=${(e: InputEvent) => {
           try {
             this.attributes = JSON.parse((e.target as any)?.value || "{}");
+            edDocument.mutationMeta.storeHistory = true;
           } catch (e) {
             // ignore
           }
@@ -336,6 +339,7 @@ export class EdButtonElement extends EdElement {
             value=${this.text}
             @input=${(e: any) => {
               this.text = e.target.value;
+              edDocument.mutationMeta.storeHistory = true;
             }}
         /></gds-input>
         <gds-dropdown
@@ -347,6 +351,7 @@ export class EdButtonElement extends EdElement {
             ...this.attributes,
             rank: e.target.value,
           };
+          edDocument.mutationMeta.storeHistory = true;
         }}
       >
         <gds-option value="primary">Primary</gds-option>
@@ -362,6 +367,7 @@ export class EdButtonElement extends EdElement {
             ...this.attributes,
             variant: e.target.value,
           };
+          edDocument.mutationMeta.storeHistory = true;
         }}
       >
         <gds-option value="neutral">Neutral</gds-option>
@@ -393,6 +399,7 @@ export class EdRichTextElement extends EdElement {
             value=${this.text}
             @input=${(e: InputEvent) => {
               this.text = (e.target as any)?.value || "";
+              edDocument.mutationMeta.storeHistory = true;
             }}
         /></gds-textarea>`;
   }
