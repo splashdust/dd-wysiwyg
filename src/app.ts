@@ -42,6 +42,7 @@ export class MyApp extends SignalWatcher(LitElement) {
   private _dropLayer!: DropLayer;
 
   #history: EdElementData[] = [edDocument.root.serialize()];
+  #historyIndex = 0;
 
   connectedCallback() {
     super.connectedCallback();
@@ -51,8 +52,11 @@ export class MyApp extends SignalWatcher(LitElement) {
       });
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "z" && (e.ctrlKey || e.metaKey)) {
+      if (e.key === "z" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
         this.#undo();
+      }
+      if (e.key === "z" && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+        this.#redo();
       }
     });
   }
@@ -104,6 +108,8 @@ export class MyApp extends SignalWatcher(LitElement) {
           this._dropLayer.clear();
           this._dropLayer.buildFromElement(edDocument.root);
           if (edDocument.mutationMeta.storeHistory) {
+            this.#historyIndex++;
+            this.#history = this.#history.slice(0, this.#historyIndex);
             this.#history.push(edDocument.root.serialize());
             edDocument.mutationMeta.storeHistory = false;
           }
@@ -114,11 +120,21 @@ export class MyApp extends SignalWatcher(LitElement) {
 
   #undo() {
     if (this.#history.length > 0) {
-      this.#history.pop();
-      edDocument.root = elementFactory(
-        this.#history.pop() || edDocument.root.serialize(),
+      this.#historyIndex = Math.max(0, this.#historyIndex - 1);
+      edDocument.root = elementFactory(this.#history[this.#historyIndex]);
+    }
+  }
+
+  #redo() {
+    if (
+      this.#history.length > 0 &&
+      this.#historyIndex < this.#history.length - 1
+    ) {
+      this.#historyIndex = Math.min(
+        this.#history.length - 1,
+        this.#historyIndex + 1,
       );
-      edDocument.mutationMeta.storeHistory = true;
+      edDocument.root = elementFactory(this.#history[this.#historyIndex]);
     }
   }
 
