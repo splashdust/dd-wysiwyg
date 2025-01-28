@@ -62,25 +62,33 @@ export class MyApp extends SignalWatcher(LitElement) {
         <gds-flex
           flex="0 0 300px"
           border="0 4xs 0 0"
+          border-color="primary"
           flex-direction="column"
           align-items="stretch"
+          background="primary"
           gap="m"
         >
           <document-properties></document-properties>
         </gds-flex>
         <gds-flex flex="0 1 100%" flex-direction="column">
-          <div style="flex: 1 1 100%" id="renderTarget"></div>
+          <div
+            style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;"
+            id="renderTarget"
+          ></div>
           <ai-generate></ai-generate>
         </gds-flex>
         <gds-flex
           flex="0 0 300px"
           border="0 0 0 4xs"
-          padding="m"
+          border-color="primary"
           flex-direction="column"
           gap="m"
+          background="primary"
         >
           <ed-palette></ed-palette>
-          <import-export></import-export>
+          <gds-flex padding="m" flex-direction="column" gap="m">
+            <import-export></import-export>
+          </gds-flex>
         </gds-flex>
       </gds-flex>
       <drop-layer></drop-layer>`;

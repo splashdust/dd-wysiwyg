@@ -1,5 +1,5 @@
 import { html } from "@sebgroup/green-core/scoping";
-import { LitElement, TemplateResult } from "lit";
+import { css, LitElement, TemplateResult } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import { SignalWatcher } from "@lit-labs/signals";
 import { EdElement } from "../editor-elements/ed-element";
@@ -24,14 +24,25 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
   render() {
     return html`
       <gds-flex flex-direction="column" align-items="stretch">
-        <gds-text tag="h3" padding="s">Document properties</gds-text>
-        <gds-divider></gds-divider>
-        <div style="max-height: 40vh; overflow: auto">
+        <gds-text
+          tag="h3"
+          padding="s"
+          font-size="heading-xs"
+          font-weight="medium"
+          >Document properties</gds-text
+        >
+        <gds-flex
+          max-height="40vh"
+          border="4xs 0"
+          border-color="primary"
+          style="overflow: auto"
+          flex-direction="column"
+          background="secondary"
+        >
           <sl-tree class="tree-with-lines">
             ${this.#renderPropertyTree(edDocument.root)}
           </sl-tree>
-        </div>
-        <gds-divider></gds-divider>
+        </gds-flex>
         <gds-flex padding="m" flex-direction="column" gap="m">
           ${when(
             this._selectedElement !== null,
@@ -47,17 +58,13 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
 
               <gds-divider color="primary"></gds-divider>
 
-              <gds-card variant="negative">
-                <gds-flex flex-direction="column">
-                  <gds-button
-                    variant="negative"
-                    @click=${this.#deleteSelectedElement}
-                  >
-                    Delete element
-                    <gds-icon-trash-can slot="trail"></gds-icon-trash-can>
-                  </gds-button>
-                </gds-flex>
-              </gds-card>
+              <gds-button
+                variant="negative"
+                @click=${this.#deleteSelectedElement}
+              >
+                Delete element
+                <gds-icon-trash-can slot="trail"></gds-icon-trash-can>
+              </gds-button>
             `,
           )}
         </gds-flex>
@@ -103,4 +110,13 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
       ${el.tag} ${el.children.map((child) => this.#renderPropertyTree(child))}
     </sl-tree-item>`;
   }
+
+  static styles = css`
+    .tree-with-lines {
+      --indent-guide-width: 1px;
+    }
+    sl-tree-item::part(item--selected) {
+      background-color: var(--sl-panel-border-color);
+    }
+  `;
 }
