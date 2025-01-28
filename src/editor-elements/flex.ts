@@ -70,6 +70,23 @@ export class EdFlexElement extends EdElement {
     return dropZones;
   }
 
+  render() {
+    const el = super.render();
+
+    // Give the flex some height if it has no children
+    if (this.children.length === 0) {
+      el.setAttribute("min-height", "40px");
+      el.setAttribute("border-radius", "xs");
+      el.setAttribute(
+        "style",
+        "border: 1px dashed #ddd; color: #ccc; font-size: 12px;align-items: center; justify-content: center;",
+      );
+      el.innerText = `gds-flex — ${this.attributes["flex-direction"] || "row"} — empty`;
+    }
+
+    return el;
+  }
+
   renderPropertyPanel() {
     return html`
     <gds-dropdown

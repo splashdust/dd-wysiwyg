@@ -127,6 +127,11 @@ export class MyApp extends SignalWatcher(LitElement) {
       margin: 0 auto;
     }
 
+    #renderTarget .highlighted {
+      outline: 1px dotted rgba(128, 128, 128, 0.8);
+      outline-offset: 2px;
+    }
+
     .tree-with-lines {
       --indent-guide-width: 1px;
     }

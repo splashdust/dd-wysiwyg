@@ -10,7 +10,7 @@ export class EdCardElement extends EdElement {
 
   getOnPreview() {
     return (e: DragEvent) => {
-      const newElement = elementFactory({ tag: "div" });
+      const newElement = elementFactory({ tag: "gds-input" });
       newElement.attributes = {
         style: "opacity: 0.5; padding: 8px; border: 1px dashed #000;",
         "data-preview": "true",
@@ -44,5 +44,21 @@ export class EdCardElement extends EdElement {
     });
 
     return dropZones;
+  }
+
+  render() {
+    const el = super.render();
+
+    // Give the flex some height if it has no children
+    if (this.children.length === 0) {
+      el.setAttribute("border-radius", "xs");
+      el.setAttribute(
+        "style",
+        "display:flex;border: 1px dashed #ddd; color: #ccc; font-size: 12px;align-items: center; justify-content: center;",
+      );
+      el.innerText = `gds-card — empty`;
+    }
+
+    return el;
   }
 }

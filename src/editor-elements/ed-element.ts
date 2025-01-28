@@ -118,8 +118,7 @@ export class EdElement implements EdElementData {
     }
 
     if (this.highlighted) {
-      el.style.outline = "1px dotted rgba(128,128,128,0.8)";
-      el.style.outlineOffset = "2px";
+      el.classList.add("highlighted");
     }
 
     if (children) {
