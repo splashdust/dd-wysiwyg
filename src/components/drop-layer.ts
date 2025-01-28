@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { EdElement } from "../ed-element";
+import { EdElement } from "../editor-elements/ed-element";
 
 import "@sebgroup/green-core/components/icon/icons/plus-small.js";
 

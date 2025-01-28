@@ -2,7 +2,7 @@ import { html } from "@sebgroup/green-core/scoping";
 import { LitElement, TemplateResult } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import { SignalWatcher } from "@lit-labs/signals";
-import { EdElement } from "../ed-element";
+import { EdElement } from "../editor-elements/ed-element";
 import { GdsTextarea } from "@sebgroup/green-core/components/textarea/index.js";
 import { when } from "lit/directives/when.js";
 import { edDocument } from "../app";

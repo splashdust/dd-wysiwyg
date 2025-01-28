@@ -1,4 +1,4 @@
-import { EdElementData } from "./ed-element";
+import { EdElementData } from "./editor-elements/ed-element";
 
 export class MarkupGenerator {
   static toMarkup(document: EdElementData): string {

@@ -4,7 +4,7 @@ import { LitElement } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import { MarkupGenerator } from "../markup-generator";
 import { edDocument } from "../app";
-import { elementFactory } from "../ed-element";
+import { elementFactory } from "../editor-elements/factory";
 
 @customElement("import-export")
 export class ImportExport extends LitElement {

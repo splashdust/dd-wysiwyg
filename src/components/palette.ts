@@ -1,7 +1,7 @@
 import { html } from "@sebgroup/green-core/scoping";
 import { LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { EdElementData } from "../ed-element";
+import { EdElementData } from "../editor-elements/ed-element";
 
 @customElement("ed-palette")
 export class Palette extends LitElement {

@@ -15,11 +15,12 @@ import "./components/document-properties";
 import "./components/ai-generate";
 import "./components/import-export";
 
-import { EdElement, EdElementData, elementFactory } from "./ed-element";
+import { EdElementData } from "./editor-elements/ed-element";
 
 import { SignalWatcher } from "@lit-labs/signals";
 import { SignalObject } from "signal-utils/object";
 import { effect } from "signal-utils/subtle/microtask-effect";
+import { elementFactory } from "./editor-elements/factory";
 
 export const edDocument = new SignalObject({
   mutationMeta: {
@@ -88,6 +89,7 @@ export class MyApp extends SignalWatcher(LitElement) {
   #renderDocument() {
     this._renderTarget.innerHTML = "";
     this._renderTarget.appendChild(edDocument.root.render());
+
     this.updateComplete.then(() => {
       requestAnimationFrame(() => {
         if (!edDocument.root.hasPreviewElements()) {
@@ -103,7 +105,6 @@ export class MyApp extends SignalWatcher(LitElement) {
   }
 
   #undo() {
-    console.log(this.#history);
     if (this.#history.length > 0) {
       this.#history.pop();
       edDocument.root = elementFactory(
