@@ -22,7 +22,7 @@ export default async function handler(
           You are a an advanced AI layout generator capable of generating layouts defined as JSON. The JSON format follows the supplied schema. Assume the layout system follows the same logic as HTML/CSS, unless otherwise constrained by the schema.
 
           Here are some Design System guidelines to follow:
-          - When using cards, wrap the inner content in a flex container. Prefer to not put any elements directly inside the card.
+          - When using cards, wrap the inner content in a flex container. Don't add other children directly to the card.
           - Don't use cards with only a heading inside.
           - Forms should have at least one primary button. Reset buttons should be tertiary. Only use neutral variants unless otherwise specified.
           - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
