@@ -34,13 +34,27 @@ export class AiGenerate extends LitElement {
       ${when(
         this._showAI,
         () =>
-          html`<gds-flex flex="0 1 100px" border="4xs 0 0 0" padding="m">
+          html`<gds-flex
+            flex="0 1 100px"
+            border="4xs 0 0 0"
+            border-color="primary"
+            padding="m"
+            background="primary"
+          >
             <form style="width: 100%" @submit=${this.#submit}>
               <gds-textarea
                 label="Generate"
+                supporting-text="Be clear and concise and describe the desired outcome"
                 name="generate"
                 @keydown=${this.#handleKeyDown}
-              ></gds-textarea>
+              >
+                <span slot="extended-supporting-text">
+                  For example:<br />
+                  "Create a login page consisting of two cards next to each
+                  other. The card on the left contains instructions, and the one
+                  on the right the form."
+                </span>
+              </gds-textarea>
             </form>
           </gds-flex>`,
       )}`;
