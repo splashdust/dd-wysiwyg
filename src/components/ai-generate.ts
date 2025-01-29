@@ -71,7 +71,7 @@ export class AiGenerate extends LitElement {
 
     try {
       const json = JSON.parse(responseJson.reply.content);
-      edDocument.root = elementFactory(json);
+      edDocument.root = elementFactory(json.root);
     } catch (e) {
       console.error(e);
     }
