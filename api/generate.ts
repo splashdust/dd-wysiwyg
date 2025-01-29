@@ -18,7 +18,15 @@ export default async function handler(
     messages: [
       {
         role: "system",
-        content: `You are a an advanced AI layout generator. Layouts are defined in a JSON format defined by the supplied schema. Assume layouts follows the same logic as HTML/CSS, unless otherwise constrained by the schema. When using cards, prefer to wrap the inner content in a flex container. Generate an optimal layout based on the user input.`,
+        content: `
+          You are a an advanced AI layout generator capable of generating layouts defined as JSON. The JSON format follows the supplied schema. Assume the layout system follows the same logic as HTML/CSS, unless otherwise constrained by the schema.
+
+          Here are some Design System guidelines to follow:
+          - When using cards, prefer to wrap the inner content in a flex container.
+          - Forms should have at least one primary button. Reset buttons should be tertiary.
+          - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
+
+          Follow the above instructions, try your best to generate an optimal layout based on the users request.`,
       },
       {
         role: "user",
