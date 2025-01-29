@@ -22,6 +22,10 @@ import { SignalObject } from "signal-utils/object";
 import { effect } from "signal-utils/subtle/microtask-effect";
 import { elementFactory } from "./editor-elements/factory";
 
+import { inject } from "@vercel/analytics";
+
+inject();
+
 export const edDocument = new SignalObject({
   mutationMeta: {
     storeHistory: false,
