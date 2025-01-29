@@ -14,7 +14,7 @@ export default async function handler(
   console.log(body);
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-2024-08-06",
+    model: "gpt-4o-mini-2024-07-18",
     messages: [
       {
         role: "system",
