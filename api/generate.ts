@@ -23,6 +23,7 @@ export default async function handler(
 
           Here are some Design System guidelines to follow:
           - When using cards, prefer to wrap the inner content in a flex container.
+          - Don't use cards as headers. In general, avoid using cards if they only contain one element.
           - Forms should have at least one primary button. Reset buttons should be tertiary.
           - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
 
