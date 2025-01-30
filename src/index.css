@@ -1,7 +1,100 @@
-:root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-Light.woff2")
+        format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-Regular.woff2")
+        format("woff2");
     font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-Book.woff2")
+        format("woff2");
+    font-weight: 450;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-Medium.woff2")
+        format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-Bold.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/**
+* Italics
+*/
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-LightItalic.woff2")
+        format("woff2");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-RegularItalic.woff2")
+        format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-BookItalic.woff2")
+        format("woff2");
+    font-weight: 450;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-MediumItalic.woff2")
+        format("woff2");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "SEB SansSerif GDS";
+    src: url("@sebgroup/fonts/fonts/SEBSansSerifGDS/SEBSansSerifGDS-BoldItalic.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+:root {
+    font-family: "SEB SansSerif GDS", Inter, system-ui, Avenir, Helvetica,
+        Arial, sans-serif;
 
     color-scheme: light;
     color: #333;

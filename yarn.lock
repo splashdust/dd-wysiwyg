@@ -415,6 +415,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.32.0.tgz#1a40b4792c08094b6479c48c90fe7f4b10ec2f54"
   integrity sha512-5hqO5S3PTEO2E5VjCePxv40gIgyS2KvO7E7/vvC/NbIW4SIRamkMr1hqj+5Y67fbBWv/bQLB6KelBQmXlyCjWA==
 
+"@sebgroup/fonts@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@sebgroup/fonts/-/fonts-2.0.2.tgz#c8195505b8662c4941821a196be52e669f84f195"
+  integrity sha512-J+kj6n7SydcTP+HZOIa6i9PAHLZ+oOuFhQ/C/mxprrNwV0ssIohXVjhezrijRAaGduowCWYOBh7Gbt13MLA8Pw==
+
 "@sebgroup/green-core@^1.63.0":
   version "1.63.0"
   resolved "https://registry.yarnpkg.com/@sebgroup/green-core/-/green-core-1.63.0.tgz#cf7bb759007c54b80828e6d7989498391646a14a"
