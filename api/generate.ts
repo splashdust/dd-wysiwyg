@@ -28,6 +28,7 @@ export default async function handler(
           - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
           - Only capitalize the first letter of any text. This applies to headings, buttons and other components, including markdown.
           - If the user requests a box, they typically mean a card.
+          - If you are asked to put a long description for an input field, put it in the extended-supporting-text slot.
 
           Follow the above instructions, try your best to generate an optimal layout based on the users request.`,
       },
@@ -126,7 +127,7 @@ const InputAttributes = z
     "supporting-text": z.string(),
   })
   .describe(
-    "Supporting text can be used if a fields needs additional clarification, but is not mandatory.",
+    "Supporting text can be used if a fields needs additional clarification, but is not mandatory. This text is displayed below the label.",
   )
   .strict();
 
@@ -143,7 +144,7 @@ const ValidInputChildren = z.lazy(() =>
           .strict(),
       })
       .describe(
-        "Extended supporting text can be slotted into inputs. The user can view it by clicking an info icon next to the label.",
+        "Extended supporting text is a slot that can be used to display a 'more information' fold-out box, in addition to the supporting text.",
       ),
   ]),
 );
