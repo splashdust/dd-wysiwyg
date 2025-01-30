@@ -30,7 +30,7 @@ export default async function handler(
           - If the user requests a box, they typically mean a card.
           - If you are asked to put a long description for an input field, put it in the extended-supporting-text slot.
 
-          Follow the above instructions, try your best to generate an optimal layout based on the users request.`,
+          Please follow the above instructions and try your best to generate an optimal layout based on the users request.`,
       },
       {
         role: "user",
