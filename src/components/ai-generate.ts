@@ -15,7 +15,8 @@ export class AiGenerate extends LitElement {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       // if command slash
       // toggle ai
-      if (e.metaKey && e.key === "/") {
+      if (e.metaKey && e.key === ".") {
+        e.preventDefault();
         this._showAI = !this._showAI;
       }
     });
