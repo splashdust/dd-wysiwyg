@@ -87,6 +87,14 @@ const FlexAttributes = z
   .object({
     gap: tokenValues,
     "flex-direction": z.enum(["row", "column"]),
+    "align-items": z.enum(["flex-start", "center", "flex-end"]),
+    "justify-content": z.enum([
+      "flex-start",
+      "center",
+      "flex-end",
+      "space-between",
+      "space-around",
+    ]),
   })
   .strict();
 
@@ -108,11 +116,37 @@ const CardAttributes = z
   )
   .strict();
 
-const InputAttributesz = z
+const InputAttributes = z
   .object({
     label: z.string(),
+    size: z.enum(["small", "large"]).describe("Large is the default size."),
+    clearable: z.boolean(),
+    type: z.enum(["text", "password", "email", "number"]),
+    required: z.boolean(),
+    "supporting-text": z.string(),
   })
+  .describe(
+    "Supporting text can be used if a fields needs additional clarification, but is not mandatory.",
+  )
   .strict();
+
+const ValidInputChildren = z.lazy(() =>
+  z.discriminatedUnion("tag", [
+    z
+      .object({
+        tag: z.literal("span"),
+        text: z.string(),
+        attributes: z
+          .object({
+            slot: z.enum(["extended-supporting-text"]),
+          })
+          .strict(),
+      })
+      .describe(
+        "Extended supporting text can be slotted into inputs. The user can view it by clicking an info icon next to the label.",
+      ),
+  ]),
+);
 
 const DividerAttributes = z
   .object({
@@ -126,12 +160,7 @@ const TextAttributes = z
   })
   .strict();
 
-const RichTextAttributes = z
-  .object({})
-  .describe(
-    "Attributes specific to rich-text components. Rich text accepts Markdown content in the text property.",
-  )
-  .strict();
+const RichTextAttributes = z.object({}).strict();
 
 const BadgeAttributes = z
   .object({
@@ -185,7 +214,8 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
     }),
     z.object({
       tag: z.literal("gds-input"),
-      attributes: InputAttributesz,
+      attributes: InputAttributes,
+      children: z.array(ValidInputChildren).optional(),
     }),
     z.object({
       tag: z.literal("gds-divider"),
@@ -196,11 +226,13 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
       attributes: TextAttributes,
       text: z.string().nullable().optional(),
     }),
-    z.object({
-      tag: z.literal("gds-rich-text"),
-      attributes: RichTextAttributes,
-      text: z.string().nullable().optional(),
-    }),
+    z
+      .object({
+        tag: z.literal("gds-rich-text"),
+        attributes: RichTextAttributes,
+        text: z.string().nullable().optional(),
+      })
+      .describe("Rich text accepts Markdown content in the text property."),
     z.object({
       tag: z.literal("gds-badge"),
       attributes: BadgeAttributes,
