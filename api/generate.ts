@@ -26,6 +26,8 @@ export default async function handler(
           - Don't use cards with only a heading inside.
           - Forms should have at least one primary button. Reset buttons should be tertiary. Only use neutral variants unless otherwise specified.
           - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
+          - Only capitalize the first letter of any text. This applies to headings, buttons and other components, including markdown.
+          - If the user requests a box, they typically mean a card.
 
           Follow the above instructions, try your best to generate an optimal layout based on the users request.`,
       },
@@ -41,21 +43,6 @@ export default async function handler(
   return response.status(200).json({ reply: completion.choices[0].message });
 }
 
-// Allowed tag names
-const allowedTags = z.enum([
-  "gds-flex",
-  "gds-grid",
-  "gds-button",
-  "gds-card",
-  "gds-input",
-  "gds-divider",
-  "gds-text",
-  "gds-rich-text",
-  "gds-badge",
-  "gds-segmented-control",
-  "gds-segment",
-]);
-
 // Common token values
 const tokenValues = z.enum([
   "4xs",
@@ -68,6 +55,7 @@ const tokenValues = z.enum([
   "xl",
   "2xl",
 ]);
+
 const colorValues = z.enum([
   "primary",
   "secondary",
@@ -77,30 +65,39 @@ const colorValues = z.enum([
   "notice",
   "warning",
   "information",
+  "copper-01",
+  "copper-02",
+  "purple-01",
+  "purple-02",
+  "green-01",
+  "green-02",
+  "blue-01",
+  "blue-02",
 ]);
 
-const ButtonAtributes = z
+const ButtonAttributes = z
   .object({
     rank: z.enum(["primary", "secondary", "tertiary"]),
     variant: z.enum(["neutral", "positive", "negative"]),
+    size: z.enum(["xs", "small", "medium", "large"]),
   })
   .strict();
 
-const FlexAtributes = z
+const FlexAttributes = z
   .object({
     gap: tokenValues,
     "flex-direction": z.enum(["row", "column"]),
   })
   .strict();
 
-const GridAtributes = z
+const GridAttributes = z
   .object({
     gap: tokenValues,
     columns: z.number().int(),
   })
   .strict();
 
-const CardAtributes = z
+const CardAttributes = z
   .object({
     variant: colorValues,
     border: z.enum(["", "4xs"]),
@@ -111,38 +108,38 @@ const CardAtributes = z
   )
   .strict();
 
-const InputAtributesz = z
+const InputAttributesz = z
   .object({
     label: z.string(),
   })
   .strict();
 
-const DividerAtributes = z
+const DividerAttributes = z
   .object({
     color: colorValues,
   })
   .strict();
 
-const TextAtributes = z
+const TextAttributes = z
   .object({
     tag: z.enum(["h1", "h2", "h3", "h4", "h5", "h6", "p"]),
   })
   .strict();
 
-const RichTextAtributes = z
+const RichTextAttributes = z
   .object({})
   .describe(
     "Attributes specific to rich-text components. Rich text accepts Markdown content in the text property.",
   )
   .strict();
 
-const BadgeAtributes = z
+const BadgeAttributes = z
   .object({
     variant: colorValues,
   })
   .strict();
 
-const SegmentedControlAtributes = z
+const SegmentedControlAttributes = z
   .object({
     value: z.string(),
   })
@@ -166,52 +163,52 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
   z.discriminatedUnion("tag", [
     z.object({
       tag: z.literal("gds-flex"),
-      attributes: FlexAtributes,
+      attributes: FlexAttributes,
       children: z.array(ValidComponents).optional(),
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-grid"),
-      attributes: GridAtributes,
+      attributes: GridAttributes,
       children: z.array(ValidComponents).optional(),
     }),
     z.object({
       tag: z.literal("gds-card"),
-      attributes: CardAtributes,
+      attributes: CardAttributes,
       children: z.array(ValidComponents).optional(),
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-button"),
-      attributes: ButtonAtributes,
+      attributes: ButtonAttributes,
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-input"),
-      attributes: InputAtributesz,
+      attributes: InputAttributesz,
     }),
     z.object({
       tag: z.literal("gds-divider"),
-      attributes: DividerAtributes,
+      attributes: DividerAttributes,
     }),
     z.object({
       tag: z.literal("gds-text"),
-      attributes: TextAtributes,
+      attributes: TextAttributes,
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-rich-text"),
-      attributes: RichTextAtributes,
+      attributes: RichTextAttributes,
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-badge"),
-      attributes: BadgeAtributes,
+      attributes: BadgeAttributes,
       text: z.string().nullable().optional(),
     }),
     z.object({
       tag: z.literal("gds-segmented-control"),
-      attributes: SegmentedControlAtributes,
+      attributes: SegmentedControlAttributes,
       children: z.array(Segment).optional(),
     }),
   ]),
