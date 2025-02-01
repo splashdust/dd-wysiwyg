@@ -26,9 +26,9 @@ export default async function handler(
           - Don't use cards with only a heading inside.
           - Forms should have at least one primary button. Reset buttons should be tertiary. Only use neutral variants unless otherwise specified.
           - Text should be wrapped in a text component, or a rich-text component if it contains Markdown.
-          - Only capitalize the first letter of any text. This applies to headings, buttons and other components, including markdown.
           - If the user requests a box, they typically mean a card.
           - If you are asked to put a long description for an input field, put it in the extended-supporting-text slot.
+          - When asked to add images, use placeholder images from placehold.co, for example https://placehold.co/600x400?text=Placeholder
 
           Please follow the above instructions and try your best to generate an optimal layout based on the users request.`,
       },
@@ -192,6 +192,13 @@ const Segment = z.lazy(() =>
   }),
 );
 
+const ImgAttributes = z
+  .object({
+    src: z.string(),
+    alt: z.string(),
+  })
+  .strict();
+
 const ValidComponents: z.ZodType<any> = z.lazy(() =>
   z.discriminatedUnion("tag", [
     z.object({
@@ -246,6 +253,10 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
       tag: z.literal("gds-segmented-control"),
       attributes: SegmentedControlAttributes,
       children: z.array(Segment).optional(),
+    }),
+    z.object({
+      tag: z.literal("gds-img"),
+      attributes: ImgAttributes,
     }),
   ]),
 );
