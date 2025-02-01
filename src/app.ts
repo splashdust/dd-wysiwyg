@@ -15,9 +15,9 @@ import "./components/document-properties";
 import "./components/ai-generate";
 import "./components/import-export";
 
-import { EdElementData } from "./editor-elements/ed-element";
+import { EdElement, EdElementData } from "./editor-elements/ed-element";
 
-import { SignalWatcher } from "@lit-labs/signals";
+import { Signal, signal, SignalWatcher } from "@lit-labs/signals";
 import { SignalObject } from "signal-utils/object";
 import { effect } from "signal-utils/subtle/microtask-effect";
 import { elementFactory } from "./editor-elements/factory";
@@ -26,6 +26,9 @@ import { inject } from "@vercel/analytics";
 
 inject();
 
+// TODO: Consolidate these into a single class
+export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
+  signal(undefined);
 export const edDocument = new SignalObject({
   mutationMeta: {
     storeHistory: false,
@@ -38,7 +41,7 @@ export const edDocument = new SignalObject({
 });
 
 @customElement("my-app")
-export class MyApp extends SignalWatcher(LitElement) {
+export class MyApp extends LitElement {
   @query("#renderTarget")
   private _renderTarget!: HTMLElement;
 
@@ -51,6 +54,18 @@ export class MyApp extends SignalWatcher(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this.updateComplete.then(() => {
+      // Effect on selection change
+      effect(() => {
+        const selectedElement = edSelection.get()?.deref()?.renderedElement;
+        if (!selectedElement) return;
+        const highlightedElements = Array.from(
+          this.shadowRoot!.querySelectorAll(".highlighted"),
+        );
+        highlightedElements.forEach((el) => el.classList.remove("highlighted"));
+        selectedElement.classList.add("highlighted");
+      });
+
+      // Effect on document data change
       effect(() => {
         this.#renderDocument();
       });
@@ -156,7 +171,7 @@ export class MyApp extends SignalWatcher(LitElement) {
     }
 
     #renderTarget .highlighted {
-      outline: 1px dotted rgba(128, 128, 128, 0.8);
+      outline: 2px dotted rgba(128, 128, 128, 0.8);
       outline-offset: 2px;
     }
 

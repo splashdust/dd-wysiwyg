@@ -5,7 +5,7 @@ import { SignalWatcher } from "@lit-labs/signals";
 import { EdElement } from "../editor-elements/ed-element";
 import { GdsTextarea } from "@sebgroup/green-core/components/textarea/index.js";
 import { when } from "lit/directives/when.js";
-import { edDocument } from "../app";
+import { edDocument, edSelection } from "../app";
 
 import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
@@ -15,8 +15,9 @@ import "@sebgroup/green-core/components/icon/icons/trash-can.js";
 
 @customElement("document-properties")
 export class DocumentProperties extends SignalWatcher(LitElement) {
-  @state()
-  private _selectedElement: EdElement | null = null;
+  get #selectedElement() {
+    return edSelection.get()?.deref();
+  }
 
   @query("#attributes")
   private _attributes!: GdsTextarea;
@@ -45,16 +46,16 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
         </gds-flex>
         <gds-flex padding="m" flex-direction="column" gap="m">
           ${when(
-            this._selectedElement !== null,
+            this.#selectedElement !== undefined,
             () => html`
               <gds-card padding="s">
                 Selected:
                 <gds-badge>
-                  <pre>&lt;${this._selectedElement?.tag}&gt;</pre>
+                  <pre>&lt;${this.#selectedElement?.tag}&gt;</pre>
                 </gds-badge>
               </gds-card>
 
-              ${this._selectedElement?.renderPropertyPanel()}
+              ${this.#selectedElement?.renderPropertyPanel()}
 
               <gds-divider color="primary"></gds-divider>
 
@@ -73,23 +74,23 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
   }
 
   #updateSelectedElementAttributes = () => {
-    if (!this._selectedElement) return;
+    if (!this.#selectedElement) return;
     try {
       const changedAttributes = JSON.parse(this._attributes.value || "{}");
-      this._selectedElement.attributes = changedAttributes;
+      this.#selectedElement.attributes = changedAttributes;
     } catch (e) {
       // ignore
     }
   };
 
   #deleteSelectedElement = () => {
-    if (!this._selectedElement) return;
-    const index = this._selectedElement.parent?.children.indexOf(
-      this._selectedElement,
+    if (!this.#selectedElement) return;
+    const index = this.#selectedElement.parent?.children.indexOf(
+      this.#selectedElement,
     );
     if (index !== undefined && index > -1) {
-      this._selectedElement.parent?.children.splice(index, 1);
-      this._selectedElement = null;
+      this.#selectedElement.parent?.children.splice(index, 1);
+      edSelection.set(undefined);
       edDocument.mutationMeta.storeHistory = true;
     }
   };
@@ -100,11 +101,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
       .expanded=${el.children.length < 4 ? true : false}
       @click=${(e: Event) => {
         if (e.currentTarget !== e.target) return;
-        if (this._selectedElement) {
-          this._selectedElement.highlighted = false;
-        }
-        this._selectedElement = el;
-        el.highlighted = true;
+        edSelection.set(new WeakRef(el));
       }}
     >
       ${el.tag} ${el.children.map((child) => this.#renderPropertyTree(child))}

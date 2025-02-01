@@ -4,7 +4,7 @@ import { signal, computed, Signal } from "@lit-labs/signals";
 
 import type { DropZone } from "../components/drop-layer";
 import { html } from "@sebgroup/green-core/scoping";
-import { edDocument } from "../app";
+import { edDocument, edSelection } from "../app";
 import { elementFactory } from "./factory";
 
 export interface EdElementData {
@@ -47,12 +47,8 @@ export class EdElement implements EdElementData {
     this.#text.set(value);
   }
 
-  #highlighted = signal(false);
   get highlighted() {
-    return this.#highlighted.get();
-  }
-  set highlighted(value: boolean) {
-    this.#highlighted.set(value);
+    return Signal.subtle.untrack(() => edSelection.get()?.deref() === this);
   }
 
   renderedElement?: HTMLElement;
