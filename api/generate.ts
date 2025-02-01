@@ -96,6 +96,7 @@ const FlexAttributes = z
       "space-between",
       "space-around",
     ]),
+    flex: z.string().nullable(),
   })
   .strict();
 
@@ -103,6 +104,7 @@ const GridAttributes = z
   .object({
     gap: tokenValues,
     columns: z.number().int(),
+    flex: z.string().nullable(),
   })
   .strict();
 
@@ -111,6 +113,7 @@ const CardAttributes = z
     variant: colorValues,
     border: z.enum(["", "4xs"]),
     shadow: tokenValues,
+    flex: z.string().nullable(),
   })
   .describe(
     "Only secondary cards should use a border, unless otherwise specified.",
