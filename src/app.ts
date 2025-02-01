@@ -14,6 +14,7 @@ import "./components/palette";
 import "./components/document-properties";
 import "./components/ai-generate";
 import "./components/import-export";
+import "./components/toolbar";
 
 import { EdElement, EdElementData } from "./editor-elements/ed-element";
 
@@ -92,14 +93,22 @@ export class MyApp extends LitElement {
           background="primary"
           gap="m"
         >
-          <document-properties></document-properties>
+          <document-properties
+            style="position:fixed;width:299px"
+          ></document-properties>
         </gds-flex>
         <gds-flex flex="0 1 100%" flex-direction="column">
+          <ed-toolbar
+            @ed-undo=${this.#undo}
+            @ed-redo=${this.#redo}
+          ></ed-toolbar>
           <div
-            style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;"
+            style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;padding-bottom: 200px"
             id="renderTarget"
           ></div>
-          <ai-generate></ai-generate>
+          <ai-generate
+            style="position:fixed; inset:auto auto 0;width:calc(100vw - 600px)"
+          ></ai-generate>
         </gds-flex>
         <gds-flex
           flex="0 0 300px"
@@ -109,9 +118,17 @@ export class MyApp extends LitElement {
           gap="m"
           background="primary"
         >
-          <ed-palette></ed-palette>
-          <gds-flex padding="m" flex-direction="column" gap="m">
-            <import-export></import-export>
+          <gds-flex position="fixed" height="100vh" flex-direction="column">
+            <ed-palette></ed-palette>
+            <gds-flex
+              padding="m"
+              flex-direction="column"
+              gap="m"
+              width="299px"
+              style="z-index:999"
+            >
+              <import-export></import-export>
+            </gds-flex>
           </gds-flex>
         </gds-flex>
       </gds-flex>
