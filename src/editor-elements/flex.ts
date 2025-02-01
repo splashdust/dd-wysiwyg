@@ -69,7 +69,6 @@ export class EdFlexElement extends EdElement {
             ...this.attributes,
             "flex-direction": e.target.value,
           };
-          edDocument.mutationMeta.storeHistory = true;
         }}>
         <gds-option value="row">Row</gds-option>
         <gds-option value="column">Column</gds-option>
@@ -81,7 +80,6 @@ export class EdFlexElement extends EdElement {
         @input=${(e: InputEvent) => {
           try {
             this.attributes = JSON.parse((e.target as any)?.value || "{}");
-            edDocument.mutationMeta.storeHistory = true;
           } catch (e) {
             // ignore
           }

@@ -14,7 +14,6 @@ export class EdButtonElement extends EdElement {
             value=${this.text}
             @input=${(e: any) => {
               this.text = e.target.value;
-              edDocument.mutationMeta.storeHistory = true;
             }}
         /></gds-input>
         <gds-dropdown
@@ -26,7 +25,6 @@ export class EdButtonElement extends EdElement {
             ...this.attributes,
             rank: e.target.value,
           };
-          edDocument.mutationMeta.storeHistory = true;
         }}
       >
         <gds-option value="primary">Primary</gds-option>
@@ -42,7 +40,6 @@ export class EdButtonElement extends EdElement {
             ...this.attributes,
             variant: e.target.value,
           };
-          edDocument.mutationMeta.storeHistory = true;
         }}
       >
         <gds-option value="neutral">Neutral</gds-option>

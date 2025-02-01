@@ -11,6 +11,12 @@ export class EdRichTextElement extends EdElement {
   render() {
     const el = super.render();
     if (this.text) {
+      // remove any text nodes
+      el.childNodes.forEach((n) => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          n.remove();
+        }
+      });
       requestAnimationFrame(
         () => (el.innerHTML = marked.parse(this.text as string) as string),
       );
@@ -25,7 +31,6 @@ export class EdRichTextElement extends EdElement {
             value=${this.text}
             @input=${(e: InputEvent) => {
               this.text = (e.target as any)?.value || "";
-              edDocument.mutationMeta.storeHistory = true;
             }}
         /></gds-textarea>`;
   }

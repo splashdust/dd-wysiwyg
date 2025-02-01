@@ -74,10 +74,6 @@ export class EdElement implements EdElementData {
     } else {
       this.children.push(child);
     }
-
-    if (!(child.attributes["data-preview"] === "true")) {
-      edDocument.mutationMeta.storeHistory = true;
-    }
   }
 
   protected getOnDrop(index?: number) {
@@ -207,7 +203,6 @@ export class EdElement implements EdElementData {
       e: any,
     ) => {
       this.text = e.target.value;
-      edDocument.mutationMeta.storeHistory = true;
     }}></gds-input>
     <gds-textarea
         label="Attributes"
@@ -216,7 +211,6 @@ export class EdElement implements EdElementData {
         @input=${(e: InputEvent) => {
           try {
             this.attributes = JSON.parse((e.target as any)?.value || "{}");
-            edDocument.mutationMeta.storeHistory = true;
           } catch (e) {
             // ignore
           }

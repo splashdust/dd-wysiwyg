@@ -31,7 +31,7 @@ export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
   signal(undefined);
 export const edDocument = new SignalObject({
   mutationMeta: {
-    storeHistory: false,
+    addHistory: true,
   },
   root: elementFactory({
     tag: "gds-flex",
@@ -67,6 +67,7 @@ export class MyApp extends LitElement {
 
       // Effect on document data change
       effect(() => {
+        console.log("Document data changed");
         this.#renderDocument();
       });
     });
@@ -123,16 +124,14 @@ export class MyApp extends LitElement {
 
     this.updateComplete.then(() => {
       requestAnimationFrame(() => {
-        if (!edDocument.root.hasPreviewElements()) {
-          this._dropLayer.clear();
-          this._dropLayer.buildFromElement(edDocument.root);
-          if (edDocument.mutationMeta.storeHistory) {
-            this.#historyIndex++;
-            this.#history = this.#history.slice(0, this.#historyIndex);
-            this.#history.push(edDocument.root.serialize());
-            edDocument.mutationMeta.storeHistory = false;
-          }
+        this._dropLayer.clear();
+        this._dropLayer.buildFromElement(edDocument.root);
+        if (edDocument.mutationMeta.addHistory) {
+          this.#history = this.#history.slice(0, this.#historyIndex + 1);
+          this.#history.push(edDocument.root.serialize());
+          this.#historyIndex = this.#history.length - 1;
         }
+        edDocument.mutationMeta.addHistory = true;
       });
     });
   }
@@ -141,6 +140,7 @@ export class MyApp extends LitElement {
     if (this.#history.length > 0) {
       this.#historyIndex = Math.max(0, this.#historyIndex - 1);
       edDocument.root = elementFactory(this.#history[this.#historyIndex]);
+      edDocument.mutationMeta.addHistory = false;
     }
   }
 
@@ -154,6 +154,7 @@ export class MyApp extends LitElement {
         this.#historyIndex + 1,
       );
       edDocument.root = elementFactory(this.#history[this.#historyIndex]);
+      edDocument.mutationMeta.addHistory = false;
     }
   }
 
