@@ -127,6 +127,37 @@ export class EdElement implements EdElementData {
     return el;
   }
 
+  #previewElement?: HTMLElement;
+  getOnPreview(index?: number) {
+    return (e: DragEvent) => {
+      this.#previewElement = document.createElement("div");
+      this.#previewElement.setAttribute(
+        "style",
+        "opacity: 0.5; padding: 8px; border: 1px dashed #000; text-align: center;",
+      );
+      this.#previewElement.textContent = "– Preview –";
+
+      this.hidePlaceholder();
+
+      if (Number.isInteger(index)) {
+        const insertBefore = this.children[index!];
+        insertBefore?.renderedElement?.insertAdjacentElement(
+          "beforebegin",
+          this.#previewElement,
+        );
+      } else {
+        this.renderedElement?.appendChild(this.#previewElement);
+      }
+    };
+  }
+
+  getOnDragLeave(index?: number) {
+    return (e: DragEvent) => {
+      this.showPlaceholder();
+      this.#previewElement?.remove();
+    };
+  }
+
   hasPreviewElements(): Boolean {
     return this.children.some(
       (child) => child.attributes["data-preview"] || child.hasPreviewElements(),
@@ -140,6 +171,35 @@ export class EdElement implements EdElementData {
       text: this.text,
       children: this.children.map((child) => child.serialize()),
     };
+  }
+
+  get placeholderText() {
+    return `${this.tag} — empty`;
+  }
+
+  #placeholderTextNode?: Text;
+  showPlaceholder() {
+    if (this.children.length > 0 || !this.renderedElement) return;
+
+    const el = this.renderedElement;
+
+    el.setAttribute(
+      "style",
+      "border-radius: 8px;min-height: 40px;border: 1px dashed #ddd; color: #ccc; font-size: 12px;align-items: center; justify-content: center;",
+    );
+
+    if (!this.#placeholderTextNode) {
+      this.#placeholderTextNode = document.createTextNode(this.placeholderText);
+    } else {
+      this.#placeholderTextNode.nodeValue = this.placeholderText;
+    }
+    el.appendChild(this.#placeholderTextNode);
+  }
+
+  hidePlaceholder() {
+    if (!this.renderedElement) return;
+    this.renderedElement.removeAttribute("style");
+    this.#placeholderTextNode?.remove();
   }
 
   renderPropertyPanel() {
