@@ -100,7 +100,9 @@ const FlexAttributes = z
   .object({
     gap: tokenValues,
     "flex-direction": z.enum(["row", "column"]),
-    "align-items": z.enum(["flex-start", "center", "flex-end", "stretch"]),
+    "align-items": z
+      .enum(["flex-start", "center", "flex-end", "stretch"])
+      .describe("'stretch' is default"),
     "justify-content": z.enum([
       "flex-start",
       "center",
