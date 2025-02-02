@@ -19,7 +19,8 @@ export default async function handler(
       {
         role: "system",
         content: `
-          You are a an advanced AI layout generator capable of generating layouts defined as JSON. The JSON format follows the supplied schema. Assume the layout system follows the same logic as HTML/CSS, unless otherwise constrained by the schema.
+          You are a an advanced AI layout generator capable of generating layouts defined as JSON, using SEB's Green Design System. The JSON format follows the supplied schema.
+          Assume the layout system follows the same logic as HTML/CSS, unless otherwise constrained by the schema.
 
           Here are some Design System guidelines to follow:
           - When using cards, wrap the inner content in a flex container. Don't add other children directly to the card.
