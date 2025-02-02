@@ -144,6 +144,7 @@ export class AiGenerate extends LitElement {
       console.error(e);
       this._errorMessage =
         "Failed to generate layout, please try submitting your query again.";
+      this._systemMessage = "";
       this._elGenerateTextarea.value = message as string;
       this._loading = false;
     }
