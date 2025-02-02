@@ -120,7 +120,10 @@ const GridAttributes = z
 const CardAttributes = z
   .object({
     variant: colorValues,
-    border: z.enum(["", "4xs"]),
+    border: z
+      .enum(["4xs"])
+      .nullable()
+      .describe("Only use with secondary cards by default"),
     shadow: tokenValues,
     flex: z.string().nullable(),
     width: z
@@ -128,9 +131,6 @@ const CardAttributes = z
       .nullable()
       .describe("Width should only be set if requested. Can use any CSS units"),
   })
-  .describe(
-    "Only secondary cards should use a border, unless otherwise specified.",
-  )
   .strict();
 
 const InputAttributes = z
@@ -182,7 +182,7 @@ const RichTextAttributes = z.object({}).strict();
 
 const BadgeAttributes = z
   .object({
-    variant: colorValues,
+    variant: colorValues.describe("Primary by default"),
   })
   .strict();
 
