@@ -101,11 +101,12 @@ export class AiGenerate extends LitElement {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const message = formData.get("generate");
+    const currentDocument = edDocument.root.get().serialize();
     form.reset();
 
     const response = await fetch("/api/generate", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, currentDocument }),
     });
 
     const responseJson = await response.json();
@@ -114,7 +115,7 @@ export class AiGenerate extends LitElement {
 
     try {
       const json = JSON.parse(responseJson.reply.content);
-      edDocument.root = elementFactory(json.root);
+      edDocument.root.set(elementFactory(json.root));
     } catch (e) {
       console.error(e);
       this._errorMessage =

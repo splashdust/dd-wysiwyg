@@ -30,7 +30,12 @@ export default async function handler(
           - If you are asked to put a long description for an input field, put it in the extended-supporting-text slot.
           - When asked to add images, use placeholder images from placehold.co, for example https://placehold.co/600x400?text=Placeholder
 
-          Please follow the above instructions and try your best to generate an optimal layout based on the users request.`,
+          Here is the current state of the document:
+          ${JSON.stringify(body.currentDocument)}
+
+          Avoid modifying the current document outside of the user's request.
+
+          Please follow the instructions and generate an optimal layout based on the users request.`,
       },
       {
         role: "user",
@@ -40,6 +45,8 @@ export default async function handler(
     response_format: zodResponseFormat(schema, "green-schema"),
     store: true,
   });
+
+  console.log(completion.choices[0].message);
 
   return response.status(200).json({ reply: completion.choices[0].message });
 }
@@ -80,7 +87,9 @@ const ButtonAttributes = z
   .object({
     rank: z.enum(["primary", "secondary", "tertiary"]),
     variant: z.enum(["neutral", "positive", "negative"]),
-    size: z.enum(["xs", "small", "medium", "large"]),
+    size: z
+      .enum(["xs", "small", "medium", "large"])
+      .describe("Use medium by default"),
   })
   .strict();
 
@@ -88,7 +97,7 @@ const FlexAttributes = z
   .object({
     gap: tokenValues,
     "flex-direction": z.enum(["row", "column"]),
-    "align-items": z.enum(["flex-start", "center", "flex-end"]),
+    "align-items": z.enum(["flex-start", "center", "flex-end", "stretch"]),
     "justify-content": z.enum([
       "flex-start",
       "center",
@@ -114,6 +123,10 @@ const CardAttributes = z
     border: z.enum(["", "4xs"]),
     shadow: tokenValues,
     flex: z.string().nullable(),
+    width: z
+      .string()
+      .nullable()
+      .describe("Width should only be set if requested. Can use any CSS units"),
   })
   .describe(
     "Only secondary cards should use a border, unless otherwise specified.",
