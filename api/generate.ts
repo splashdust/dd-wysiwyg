@@ -36,6 +36,8 @@ export default async function handler(
 
           Avoid modifying the current document outside of the user's request.
 
+          If the user asks a question which is not translatable to a layout, you can respond in the systemMessage field and leave the document as is.
+
           Please follow the instructions and generate an optimal layout based on the users request.`,
       },
       {
@@ -277,6 +279,11 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
 );
 
 const Schema = z.object({
+  systemMessage: z
+    .string()
+    .describe(
+      "A message you can add back to the user, explaining the system's reasoning.",
+    ),
   root: ValidComponents,
 });
 

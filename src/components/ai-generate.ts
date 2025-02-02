@@ -5,14 +5,16 @@ import { when } from "lit/directives/when.js";
 import { edDocument } from "../app";
 import { elementFactory } from "../editor-elements/factory";
 
-import "@sebgroup/green-core/components/icon/icons/circle-x.js";
 import { GdsTextarea } from "@sebgroup/green-core/components";
+import "@sebgroup/green-core/components/icon/icons/circle-x.js";
+import "@sebgroup/green-core/components/icon/icons/circle-info.js";
 
 @customElement("ai-generate")
 export class AiGenerate extends LitElement {
   @state() private _loading = false;
   @state() private _showAI = false;
   @state() private _errorMessage = "";
+  @state() private _systemMessage = "";
 
   @query("#generate")
   private _elGenerateTextarea!: GdsTextarea;
@@ -33,7 +35,7 @@ export class AiGenerate extends LitElement {
     return html`<gds-flex
         flex-direction="column"
         align-items="center"
-        margin="0 0 m"
+        padding="m"
       >
         ${when(
           this._loading,
@@ -54,6 +56,26 @@ export class AiGenerate extends LitElement {
               ><gds-icon-circle-x></gds-icon-circle-x> ${this
                 ._errorMessage}</gds-card
             >`,
+        )}
+        ${when(
+          !this._loading && this._systemMessage.length > 0,
+          () =>
+            html`<gds-card
+              variant="notice"
+              display="flex"
+              border="4xs"
+              padding="s"
+              style="gap:.5rem;flex-direction:column"
+              min-width="400px"
+            >
+              <gds-flex align-items="center" gap="xs">
+                <gds-icon-circle-info></gds-icon-circle-info>
+                <gds-text font-weight="medium" max-width="80ch"
+                  >System message</gds-text
+                >
+              </gds-flex>
+              ${this._systemMessage}
+            </gds-card>`,
         )}
       </gds-flex>
       ${when(
@@ -116,6 +138,7 @@ export class AiGenerate extends LitElement {
     try {
       const json = JSON.parse(responseJson.reply.content);
       edDocument.root.set(elementFactory(json.root));
+      this._systemMessage = json.systemMessage;
     } catch (e) {
       console.error(e);
       this._errorMessage =
