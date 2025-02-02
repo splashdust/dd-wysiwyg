@@ -58,7 +58,7 @@ export class AiGenerate extends LitElement {
             >`,
         )}
         ${when(
-          !this._loading && this._systemMessage.length > 0,
+          this._systemMessage.length > 0,
           () =>
             html`<gds-card
               variant="notice"
@@ -119,6 +119,8 @@ export class AiGenerate extends LitElement {
     e.preventDefault();
 
     this._loading = true;
+    this._errorMessage = "";
+    this._systemMessage = "";
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
