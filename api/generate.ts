@@ -176,7 +176,7 @@ const ValidInputChildren = z.lazy(() =>
 
 const DividerAttributes = z
   .object({
-    color: colorValues,
+    color: colorValues.describe("Default to primary"),
   })
   .strict();
 
