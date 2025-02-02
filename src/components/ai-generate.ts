@@ -126,17 +126,18 @@ export class AiGenerate extends LitElement {
     const currentDocument = edDocument.root.get().serialize();
     form.reset();
 
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      body: JSON.stringify({ message, currentDocument }),
-    });
-
-    const responseJson = await response.json();
-
-    this._loading = false;
-
     try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        body: JSON.stringify({ message, currentDocument }),
+      });
+
+      const responseJson = await response.json();
+
+      this._loading = false;
+
       const json = JSON.parse(responseJson.reply.content);
+
       edDocument.root.set(elementFactory(json.root));
       this._systemMessage = json.systemMessage;
     } catch (e) {
@@ -144,6 +145,7 @@ export class AiGenerate extends LitElement {
       this._errorMessage =
         "Failed to generate layout, please try submitting your query again.";
       this._elGenerateTextarea.value = message as string;
+      this._loading = false;
     }
   };
 }

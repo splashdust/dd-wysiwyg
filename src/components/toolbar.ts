@@ -14,6 +14,8 @@ export class EdToolbar extends LitElement {
       border="0 0 4xs 0"
       border-color="primary"
       background="primary"
+      height="75px"
+      align-items="center"
     >
       <!-- <gds-segmented-control size="small" style="width:300px" value="preview">
         <gds-segment value="preview">Preview</gds-segment>

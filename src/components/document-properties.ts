@@ -25,13 +25,18 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
   render() {
     return html`
       <gds-flex flex-direction="column" align-items="stretch">
-        <gds-text
-          tag="h3"
-          padding="s"
-          font-size="heading-xs"
-          font-weight="medium"
-          >Document properties</gds-text
-        >
+        <gds-flex height="74px" flex-direction="column">
+          <gds-text
+            tag="h3"
+            padding="s s 0 s"
+            font-size="heading-xs"
+            font-weight="medium"
+            >Document properties</gds-text
+          >
+          <gds-text padding="0 s m s" font-size="detail-xs" font-weight="medium"
+            >Select elements to edit properties</gds-text
+          >
+        </gds-flex>
         <gds-flex
           max-height="40vh"
           border="4xs 0"

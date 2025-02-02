@@ -31,14 +31,17 @@ export default async function handler(
           - If you are asked to put a long description for an input field, put it in the extended-supporting-text slot.
           - When asked to add images, use placeholder images from placehold.co, for example https://placehold.co/600x400?text=Placeholder
 
+          Other instructions:
+          - Avoid modifying the current document outside of the user's request.
+          - If the user asks a question which is not translatable to a layout, you can respond in the systemMessage field and leave the document as is.
+
           Here is the current state of the document:
           ${JSON.stringify(body.currentDocument)}
 
-          Avoid modifying the current document outside of the user's request.
+          Please follow the instructions and generate an optimal layout based on the users request.
 
-          If the user asks a question which is not translatable to a layout, you can respond in the systemMessage field and leave the document as is.
-
-          Please follow the instructions and generate an optimal layout based on the users request.`,
+          Do not add any extra whitespace or characters to the JSON output.
+          `,
       },
       {
         role: "user",
@@ -111,6 +114,7 @@ const FlexAttributes = z
       "space-around",
     ]),
     flex: z.string().nullable(),
+    width: z.string().describe("Default to 100%"),
   })
   .strict();
 

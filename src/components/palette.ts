@@ -184,16 +184,18 @@ export class Palette extends LitElement {
   render() {
     return html`
       <gds-flex flex-direction="column">
-        <gds-text
-          tag="h3"
-          padding="s s 0 s"
-          font-size="heading-xs"
-          font-weight="medium"
-          >Palette</gds-text
-        >
-        <gds-text padding="0 s m s" font-size="detail-xs" font-weight="medium"
-          >Drag and drop elements to the canvas</gds-text
-        >
+        <gds-flex height="74px" flex-direction="column">
+          <gds-text
+            tag="h3"
+            padding="s s 0 s"
+            font-size="heading-xs"
+            font-weight="medium"
+            >Palette</gds-text
+          >
+          <gds-text padding="0 s m s" font-size="detail-xs" font-weight="medium"
+            >Drag and drop elements to the canvas</gds-text
+          >
+        </gds-flex>
         <gds-grid
           columns="2"
           gap="m"
