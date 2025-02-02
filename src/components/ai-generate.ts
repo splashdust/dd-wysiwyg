@@ -1,14 +1,21 @@
 import { html } from "@sebgroup/green-core/scoping";
 import { LitElement } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, query, state } from "lit/decorators.js";
 import { when } from "lit/directives/when.js";
 import { edDocument } from "../app";
 import { elementFactory } from "../editor-elements/factory";
+
+import "@sebgroup/green-core/components/icon/icons/circle-x.js";
+import { GdsTextarea } from "@sebgroup/green-core/components";
 
 @customElement("ai-generate")
 export class AiGenerate extends LitElement {
   @state() private _loading = false;
   @state() private _showAI = false;
+  @state() private _errorMessage = "";
+
+  @query("#generate")
+  private _elGenerateTextarea!: GdsTextarea;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -23,13 +30,30 @@ export class AiGenerate extends LitElement {
   }
 
   render() {
-    return html`<gds-flex>
+    return html`<gds-flex
+        flex-direction="column"
+        align-items="center"
+        margin="0 0 m"
+      >
         ${when(
           this._loading,
           () =>
             html`<sl-spinner
-              style="margin-left:auto; margin-right:auto; margin-bottom: 1rem; font-size: 3rem; --indicator-color: #333; --track-color: #bbb;--track-width: 10px;"
+              style="font-size: 3rem; --indicator-color: #333; --track-color: #bbb;--track-width: 10px;"
             ></sl-spinner>`,
+        )}
+        ${when(
+          this._errorMessage.length > 0,
+          () =>
+            html`<gds-card
+              variant="negative"
+              display="flex"
+              border="4xs"
+              padding="s"
+              style="align-items:center;gap:.5rem"
+              ><gds-icon-circle-x></gds-icon-circle-x> ${this
+                ._errorMessage}</gds-card
+            >`,
         )}
       </gds-flex>
       ${when(
@@ -44,6 +68,7 @@ export class AiGenerate extends LitElement {
           >
             <form style="width: 100%" @submit=${this.#submit}>
               <gds-textarea
+                id="generate"
                 label="Generate"
                 supporting-text="Be clear and concise and describe the desired outcome"
                 name="generate"
@@ -73,11 +98,14 @@ export class AiGenerate extends LitElement {
 
     this._loading = true;
 
-    const form = new FormData(e.target as HTMLFormElement);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const message = formData.get("generate");
+    form.reset();
 
     const response = await fetch("/api/generate", {
       method: "POST",
-      body: JSON.stringify({ message: form.get("generate") }),
+      body: JSON.stringify({ message }),
     });
 
     const responseJson = await response.json();
@@ -89,6 +117,9 @@ export class AiGenerate extends LitElement {
       edDocument.root = elementFactory(json.root);
     } catch (e) {
       console.error(e);
+      this._errorMessage =
+        "Failed to generate layout, please try submitting your query again.";
+      this._elGenerateTextarea.value = message as string;
     }
   };
 }
