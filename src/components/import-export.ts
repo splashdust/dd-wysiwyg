@@ -21,7 +21,9 @@ export class ImportExport extends LitElement {
         <gds-button
           slot="trigger"
           @click=${() => {
-            this._generatedMarkup = MarkupGenerator.toMarkup(edDocument.root);
+            this._generatedMarkup = MarkupGenerator.toMarkup(
+              edDocument.root.get(),
+            );
           }}
           >Export HTML</gds-button
         >
@@ -30,8 +32,8 @@ export class ImportExport extends LitElement {
         heading="Import/export"
         @gds-close=${(e: CustomEvent) => {
           if (e.detail === "btn-ok") {
-            edDocument.root = elementFactory(
-              JSON.parse(this._importExport.value || "{}"),
+            edDocument.root.set(
+              elementFactory(JSON.parse(this._importExport.value || "{}")),
             );
           }
         }}
@@ -43,7 +45,9 @@ export class ImportExport extends LitElement {
         <gds-button
           slot="trigger"
           @click=${() => {
-            this._serializedJson = JSON.stringify(edDocument.root.serialize());
+            this._serializedJson = JSON.stringify(
+              edDocument.root.get().serialize(),
+            );
           }}
           >Import/export JSON</gds-button
         >

@@ -30,16 +30,19 @@ inject();
 // TODO: Consolidate these into a single class
 export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
   signal(undefined);
-export const edDocument = new SignalObject({
-  mutationMeta: {
-    addHistory: true,
+export const edDocument = {
+  stateMeta: {
+    shouldAppendHistoryOnNextRender: true,
   },
-  root: elementFactory({
-    tag: "gds-flex",
-    attributes: { padding: "m", gap: "m", "flex-direction": "column" },
-    children: [],
-  }),
-});
+  root: signal(
+    elementFactory({
+      tag: "gds-flex",
+      attributes: { padding: "m", gap: "m", "flex-direction": "column" },
+      children: [],
+    }),
+  ),
+};
+
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -49,7 +52,7 @@ export class MyApp extends LitElement {
   @query("drop-layer")
   private _dropLayer!: DropLayer;
 
-  #history: EdElementData[] = [edDocument.root.serialize()];
+  #history: EdElementData[] = [edDocument.root.get().serialize()];
   #historyIndex = 0;
 
   connectedCallback() {
@@ -137,18 +140,18 @@ export class MyApp extends LitElement {
 
   #renderDocument() {
     this._renderTarget.innerHTML = "";
-    this._renderTarget.appendChild(edDocument.root.render());
+    this._renderTarget.appendChild(edDocument.root.get().render());
 
     this.updateComplete.then(() => {
       requestAnimationFrame(() => {
         this._dropLayer.clear();
-        this._dropLayer.buildFromElement(edDocument.root);
-        if (edDocument.mutationMeta.addHistory) {
+        this._dropLayer.buildFromElement(edDocument.root.get());
+        if (edDocument.stateMeta.shouldAppendHistoryOnNextRender) {
           this.#history = this.#history.slice(0, this.#historyIndex + 1);
-          this.#history.push(edDocument.root.serialize());
+          this.#history.push(edDocument.root.get().serialize());
           this.#historyIndex = this.#history.length - 1;
         }
-        edDocument.mutationMeta.addHistory = true;
+        edDocument.stateMeta.shouldAppendHistoryOnNextRender = true;
       });
     });
   }
@@ -156,8 +159,8 @@ export class MyApp extends LitElement {
   #undo() {
     if (this.#history.length > 0) {
       this.#historyIndex = Math.max(0, this.#historyIndex - 1);
-      edDocument.root = elementFactory(this.#history[this.#historyIndex]);
-      edDocument.mutationMeta.addHistory = false;
+      edDocument.root.set(elementFactory(this.#history[this.#historyIndex]));
+      edDocument.stateMeta.shouldAppendHistoryOnNextRender = false;
     }
   }
 
@@ -170,8 +173,8 @@ export class MyApp extends LitElement {
         this.#history.length - 1,
         this.#historyIndex + 1,
       );
-      edDocument.root = elementFactory(this.#history[this.#historyIndex]);
-      edDocument.mutationMeta.addHistory = false;
+      edDocument.root.set(elementFactory(this.#history[this.#historyIndex]));
+      edDocument.stateMeta.shouldAppendHistoryOnNextRender = false;
     }
   }
 

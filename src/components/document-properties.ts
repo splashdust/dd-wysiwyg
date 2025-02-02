@@ -41,7 +41,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
           background="secondary"
         >
           <sl-tree class="tree-with-lines">
-            ${this.#renderPropertyTree(edDocument.root)}
+            ${this.#renderPropertyTree(edDocument.root.get())}
           </sl-tree>
         </gds-flex>
         <gds-flex padding="m" flex-direction="column" gap="m">
