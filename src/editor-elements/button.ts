@@ -45,6 +45,22 @@ export class EdButtonElement extends EdElement {
         <gds-option value="neutral">Neutral</gds-option>
         <gds-option value="positive">Positive</gds-option>
         <gds-option value="negative">Negative</gds-option>
+      </gds-dropdown>
+      <gds-dropdown
+        size="small"
+        label="Size"
+        value=${this.attributes["size"] || "medium"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            size: e.target.value,
+          };
+        }}
+      >
+        <gds-option value="xs">Extra small</gds-option>
+        <gds-option value="small">Small</gds-option>
+        <gds-option value="medium">Medium</gds-option>
+        <gds-option value="large">Large</gds-option>
       </gds-dropdown>`;
   }
 }
