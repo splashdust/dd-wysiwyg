@@ -14,7 +14,7 @@ export default async function handler(
   console.log(body);
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-2024-08-06",
+    model: "gpt-4o-mini-2024-07-18",
     messages: [
       {
         role: "system",
@@ -39,8 +39,6 @@ export default async function handler(
           ${JSON.stringify(body.currentDocument)}
 
           Please follow the instructions and generate an optimal layout based on the users request.
-
-          Do not add any extra whitespace or characters to the JSON output.
           `,
       },
       {
@@ -96,6 +94,7 @@ const ButtonAttributes = z
     size: z
       .enum(["xs", "small", "medium", "large"])
       .describe("Use medium by default"),
+    type: z.enum(["button", "reset"]),
   })
   .strict();
 
@@ -133,7 +132,7 @@ const CardAttributes = z
       .enum(["4xs"])
       .nullable()
       .describe("Only use with secondary cards by default"),
-    shadow: tokenValues,
+    shadow: tokenValues.nullable(),
     flex: z.string().nullable(),
     width: z
       .string()
@@ -171,6 +170,56 @@ const ValidInputChildren = z.lazy(() =>
       .describe(
         "Extended supporting text is a slot that can be used to display a 'more information' fold-out box, in addition to the supporting text.",
       ),
+  ]),
+);
+
+const DropdownAttributes = z
+  .object({
+    size: z.enum(["small", "medium"]),
+    label: z.string(),
+    "supporting-text": z.string(),
+  })
+  .strict();
+
+const OptionAttributes = z
+  .object({
+    value: z.string(),
+  })
+  .strict();
+
+const ValidDropdownChildren = z.lazy(() =>
+  z.discriminatedUnion("tag", [
+    z
+      .object({
+        tag: z.literal("gds-option"),
+        text: z.string(),
+        attributes: OptionAttributes,
+      }),
+  ]),
+);
+
+const FilterChipsAttributes = z
+  .object({
+    value: z.string(),
+    multiple: z.boolean(),
+  })
+  .strict();
+
+const FilterChipAttributes = z
+  .object({
+    value: z.string(),
+    selected: z.boolean(),
+  })
+  .strict();
+
+const ValidFilterChipChildren = z.lazy(() =>
+  z.discriminatedUnion("tag", [
+    z
+      .object({
+        tag: z.literal("gds-filter-chip"),
+        text: z.string(),
+        attributes: FilterChipAttributes,
+      }),
   ]),
 );
 
@@ -281,8 +330,30 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
       tag: z.literal("gds-img"),
       attributes: ImgAttributes,
     }),
+    z.object({
+      tag: z.literal("gds-dropdown"),
+      attributes: DropdownAttributes,
+      children: z.array(ValidDropdownChildren).optional(),
+    }),
+    z.object({
+      tag: z.literal("gds-filter-chips"),
+      attributes: FilterChipsAttributes,
+      children: z.array(ValidFilterChipChildren).optional(),
+    }),
   ]),
 );
+
+const GeneralHTMLElements: z.ZodType<any> = z.lazy(() =>
+  z.discriminatedUnion("tag", [
+    z.object({
+      tag: z.literal("form"),
+      attributes: z.object({}).strict(),
+      children: z.array(ValidComponents).optional(),
+      text: z.string().nullable().optional(),
+    })
+  ]),
+);
+
 
 const Schema = z.object({
   systemMessage: z
@@ -290,7 +361,7 @@ const Schema = z.object({
     .describe(
       "A message you can add back to the user, explaining the system's reasoning.",
     ),
-  root: ValidComponents,
+  root: z.union([ValidComponents, GeneralHTMLElements]),
 });
 
 export const schema = Schema;
