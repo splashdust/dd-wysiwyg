@@ -7,6 +7,9 @@ import "@sebgroup/green-core/components/index.js";
 import "@sebgroup/green-core/components/dialog/index.js";
 import "@sebgroup/green-core/components/rich-text/index.js";
 
+import { registerTransitionalStyles } from "@sebgroup/green-core/transitional-styles";
+registerTransitionalStyles();
+
 import "./components/drop-layer";
 import type { DropLayer } from "./components/drop-layer";
 
@@ -42,7 +45,6 @@ export const edDocument = {
     }),
   ),
 };
-
 
 @customElement("my-app")
 export class MyApp extends LitElement {
@@ -86,7 +88,8 @@ export class MyApp extends LitElement {
   }
 
   render() {
-    return html`<gds-flex width="100%" height="100%">
+    return html`<gds-theme
+      ><gds-flex width="100%" height="100%">
         <gds-flex
           flex="0 0 300px"
           border="0 4xs 0 0"
@@ -135,7 +138,8 @@ export class MyApp extends LitElement {
           </gds-flex>
         </gds-flex>
       </gds-flex>
-      <drop-layer></drop-layer>`;
+      <drop-layer></drop-layer>
+    </gds-theme>`;
   }
 
   #renderDocument() {
