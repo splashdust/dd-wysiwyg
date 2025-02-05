@@ -6,6 +6,7 @@ import type { DropZone } from "../components/drop-layer";
 import { html } from "@sebgroup/green-core/scoping";
 import { edDocument, edSelection } from "../app";
 import { elementFactory } from "./factory";
+import * as _hyperscript from "hyperscript.org";
 
 export interface EdElementData {
   tag: string;
@@ -97,6 +98,7 @@ export class EdElement implements EdElementData {
   render() {
     const { tag, children, text, attributes } = this;
     this.renderedElement = document.createElement(tag);
+
     const el = this.renderedElement;
 
     if (attributes) {
@@ -204,6 +206,25 @@ export class EdElement implements EdElementData {
     ) => {
       this.text = e.target.value;
     }}></gds-input>
+    <gds-input
+    label="Id"
+    value=${this.attributes["id"] || ""}
+    @input=${(e: any) => {
+      this.attributes = {
+        ...this.attributes,
+        id: e.target.value,
+      };
+    }}></gds-input>
+    <gds-textarea
+      label="Hyperscript"
+      value=${this.attributes["_"] || ""}
+      @input=${(e: any) => {
+        this.attributes = {
+          ...this.attributes,
+          _: e.target.value,
+        };
+      }}
+    ></gds-textarea>
     <gds-textarea
         label="Attributes"
         id="attributes"

@@ -61,6 +61,25 @@ export class EdButtonElement extends EdElement {
         <gds-option value="small">Small</gds-option>
         <gds-option value="medium">Medium</gds-option>
         <gds-option value="large">Large</gds-option>
-      </gds-dropdown>`;
+      </gds-dropdown>
+      <gds-input
+        label="Id"
+        value=${this.attributes["id"] || ""}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            id: e.target.value,
+          };
+      }}></gds-input>
+      <gds-textarea
+        label="Hyperscript"
+        value=${this.attributes["_"] || ""}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            _: e.target.value,
+          };
+        }}
+        ></gds-textarea>`;
   }
 }

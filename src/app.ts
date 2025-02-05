@@ -32,6 +32,9 @@ import { inject } from "@vercel/analytics";
 
 inject();
 
+import * as _hyperscript from "hyperscript.org";
+_hyperscript.browserInit();
+
 // TODO: Consolidate these into a single class
 export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
   signal(undefined);
@@ -173,6 +176,7 @@ export class MyApp extends LitElement {
   #renderDocument() {
     this._renderTarget.innerHTML = "";
     this._renderTarget.appendChild(edDocument.root.get().render());
+    _hyperscript.processNode(this._renderTarget);
 
     this.updateComplete.then(() => {
       requestAnimationFrame(() => {

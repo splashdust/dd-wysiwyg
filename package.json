@@ -19,6 +19,7 @@
     "@vercel/functions": "^1.6.0",
     "@vercel/node": "^5.0.4",
     "hono": "^4.6.17",
+    "hyperscript.org": "^0.9.14",
     "lit": "^3.2.1",
     "marked": "^15.0.6",
     "openai": "^4.79.3",
