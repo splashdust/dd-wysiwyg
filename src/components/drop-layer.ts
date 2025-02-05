@@ -54,6 +54,9 @@ export class DropLayer extends LitElement {
     return html` ${this._dropZones.map(
       (dz) => html`
         <div
+          @click=${(e: MouseEvent) => {
+            this.isActive = false;
+          }}
           class="drop-zone ${dz.anchorPosition}"
           @dragenter=${(e: DragEvent) => {
             console.log(e.dataTransfer?.getData("application/json"));
