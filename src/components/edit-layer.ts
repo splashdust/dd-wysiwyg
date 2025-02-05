@@ -11,7 +11,11 @@ export interface EdElementOverlay {
 
 @customElement('ed-edit-layer')
 export class EdEditLayer extends LitElement {
-    @property({ type: Array }) overlays: EdElementOverlay[] = [];
+    @property({ type: Array })
+    overlays: EdElementOverlay[] = [];
+
+    @property({type: Boolean })
+    isActive = true;
 
     #draggedElement?: {
         el: EdElement,
@@ -52,7 +56,7 @@ export class EdEditLayer extends LitElement {
             ${this.overlays.map(
                 (overlay) => html`
                     <div
-                        class="overlay"
+                        class="overlay ${this.isActive ? 'active' : ''}"
                         @click=${() => {
                             edSelection.set(new WeakRef(overlay.edElement));
                         }}
@@ -107,11 +111,16 @@ export class EdEditLayer extends LitElement {
             height: 100%;
             pointer-events: none;
         }
-
+        
         .overlay {
+            display: none;
             position: absolute;
             box-sizing: border-box;
             pointer-events: all;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         .overlay:hover {

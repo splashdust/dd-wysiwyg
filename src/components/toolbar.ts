@@ -17,10 +17,6 @@ export class EdToolbar extends LitElement {
       height="75px"
       align-items="center"
     >
-      <!-- <gds-segmented-control size="small" style="width:300px" value="preview">
-        <gds-segment value="preview">Preview</gds-segment>
-        <gds-segment value="edit">Edit</gds-segment>
-      </gds-segmented-control> -->
       <gds-button
         rank="secondary"
         @click=${() =>
@@ -41,7 +37,14 @@ export class EdToolbar extends LitElement {
         ></gds-icon-arrow-rotate-clockwise>
         Redo
       </gds-button>
-      <gds-spacer style="width:100%"></gds-spacer>
+      <gds-segmented-control size="small" value="edit" @change=${(e: Event) => {
+        this.dispatchEvent(
+          new CustomEvent("ed-mode", { bubbles: true, detail: { value: (e.target as any).value } })
+        );
+      }}>
+        <gds-segment value="edit">Edit</gds-segment>
+        <gds-segment value="preview">Preview</gds-segment>
+      </gds-segmented-control>
       <gds-dropdown
         label="Design version"
         hide-label

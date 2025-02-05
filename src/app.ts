@@ -124,6 +124,14 @@ export class MyApp extends LitElement {
             @ed-design-version=${(e: CustomEvent) => {
               this._designVersion = e.detail.value;
             }}
+            @ed-mode=${(e: CustomEvent) => {
+              if (e.detail.value === "preview") {
+                this._editLayer.isActive = false;
+              } else {
+                console.log("Edit mode");
+                this._editLayer.isActive = true;
+              }
+            }}
           ></ed-toolbar>
           <gds-theme design-version=${this._designVersion}>
             <div
