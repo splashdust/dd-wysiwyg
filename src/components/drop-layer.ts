@@ -121,12 +121,14 @@ export class DropLayer extends LitElement {
       height: 100%;
       pointer-events: none;
       opacity: 0;
+      display: none;
       transition: opacity 0.2s;
     }
 
     :host([isActive]) {
       pointer-events: all;
       opacity: 1;
+      display: block;
     }
 
     .drop-zone {

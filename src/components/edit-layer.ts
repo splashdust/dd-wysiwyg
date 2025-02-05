@@ -13,6 +13,17 @@ export interface EdElementOverlay {
 export class EdEditLayer extends LitElement {
     @property({ type: Array }) overlays: EdElementOverlay[] = [];
 
+    #draggedElement?: {
+        el: EdElement,
+        currentParent: EdElement,
+        index: number,
+    };
+
+    connectedCallback(): void {
+        super.connectedCallback();
+        window.addEventListener('resize', () => this.requestUpdate());
+    }
+
     clear() {
         this.overlays = [];
     }
@@ -45,6 +56,33 @@ export class EdEditLayer extends LitElement {
                         @click=${() => {
                             edSelection.set(new WeakRef(overlay.edElement));
                         }}
+                        draggable="true"
+                        @dragstart=${(e: DragEvent) => {
+                            const el = overlay.edElement;
+                            const index = el.parent?.children.indexOf(el);
+                            if (index !== undefined && index > -1) {
+                                el.parent?.children.splice(index, 1);
+                                edSelection.set(undefined);
+                                this.#draggedElement = {
+                                    el,
+                                    currentParent: el.parent!,
+                                    index,
+                                };
+                            }
+                            e.dataTransfer?.setData(
+                                "application/json",
+                                JSON.stringify(el.serialize()),
+                            );
+                        }}
+                        @dragend=${(e: DragEvent) => {
+                            if (this.#draggedElement && e.dataTransfer?.dropEffect === "none") {
+                                this.#draggedElement.currentParent.addChild(
+                                    this.#draggedElement.el,
+                                    this.#draggedElement.index,
+                                );
+                                this.#draggedElement = undefined;
+                            }
+                        }}
                         style="
                             top: ${overlay.elementRef.getBoundingClientRect().top}px;
                             left: ${overlay.elementRef.getBoundingClientRect().left}px;
@@ -65,6 +103,8 @@ export class EdEditLayer extends LitElement {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
         }
 

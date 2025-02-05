@@ -96,7 +96,7 @@ export class MyApp extends LitElement {
   }
 
   render() {
-    return html`<gds-theme design-version="${this._designVersion}"
+    return html`<gds-theme design-version="2023"
       ><gds-flex width="100%" height="100%">
         <gds-flex
           flex="0 0 300px"
@@ -119,10 +119,12 @@ export class MyApp extends LitElement {
               this._designVersion = e.detail.value;
             }}
           ></ed-toolbar>
-          <div
-            style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;padding-bottom: 200px"
-            id="renderTarget"
-          ></div>
+          <gds-theme design-version=${this._designVersion}>
+            <div
+              style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;padding-bottom: 200px"
+              id="renderTarget"
+            ></div>
+          </gds-theme>
           <ai-generate
             style="position:fixed; inset:auto auto 0;width:calc(100vw - 600px)"
           ></ai-generate>
