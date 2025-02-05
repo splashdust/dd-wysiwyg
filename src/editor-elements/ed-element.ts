@@ -217,4 +217,8 @@ export class EdElement implements EdElementData {
         }}
     /></gds-textarea>`;
   }
+
+  renderEditOverlay() {
+    return html``;
+  }
 }

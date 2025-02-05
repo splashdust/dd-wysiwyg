@@ -1,5 +1,5 @@
 import { LitElement, css } from "lit";
-import { customElement, query } from "lit/decorators.js";
+import { customElement, query, state } from "lit/decorators.js";
 
 import { html } from "@sebgroup/green-core/scoping";
 
@@ -13,6 +13,9 @@ registerTransitionalStyles();
 import "./components/drop-layer";
 import type { DropLayer } from "./components/drop-layer";
 
+import "./components/edit-layer";
+import type { EdEditLayer } from "./components/edit-layer";
+
 import "./components/palette";
 import "./components/document-properties";
 import "./components/ai-generate";
@@ -21,8 +24,7 @@ import "./components/toolbar";
 
 import { EdElement, EdElementData } from "./editor-elements/ed-element";
 
-import { Signal, signal, SignalWatcher } from "@lit-labs/signals";
-import { SignalObject } from "signal-utils/object";
+import { Signal, signal } from "@lit-labs/signals";
 import { effect } from "signal-utils/subtle/microtask-effect";
 import { elementFactory } from "./editor-elements/factory";
 
@@ -53,6 +55,12 @@ export class MyApp extends LitElement {
 
   @query("drop-layer")
   private _dropLayer!: DropLayer;
+
+  @query("ed-edit-layer")
+  private _editLayer!: EdEditLayer;
+
+  @state()
+  private _designVersion = '2023';
 
   #history: EdElementData[] = [edDocument.root.get().serialize()];
   #historyIndex = 0;
@@ -88,7 +96,7 @@ export class MyApp extends LitElement {
   }
 
   render() {
-    return html`<gds-theme
+    return html`<gds-theme design-version="${this._designVersion}"
       ><gds-flex width="100%" height="100%">
         <gds-flex
           flex="0 0 300px"
@@ -107,6 +115,9 @@ export class MyApp extends LitElement {
           <ed-toolbar
             @ed-undo=${this.#undo}
             @ed-redo=${this.#redo}
+            @ed-design-version=${(e: CustomEvent) => {
+              this._designVersion = e.detail.value;
+            }}
           ></ed-toolbar>
           <div
             style="flex: 1 1 100%; padding: 8px; box-sizing: border-box;padding-bottom: 200px"
@@ -138,6 +149,7 @@ export class MyApp extends LitElement {
           </gds-flex>
         </gds-flex>
       </gds-flex>
+      <ed-edit-layer></ed-edit-layer>
       <drop-layer></drop-layer>
     </gds-theme>`;
   }
@@ -150,6 +162,10 @@ export class MyApp extends LitElement {
       requestAnimationFrame(() => {
         this._dropLayer.clear();
         this._dropLayer.buildFromElement(edDocument.root.get());
+
+        this._editLayer.clear();
+        this._editLayer.buildFromElement(edDocument.root.get());
+
         if (edDocument.stateMeta.shouldAppendHistoryOnNextRender) {
           this.#history = this.#history.slice(0, this.#historyIndex + 1);
           this.#history.push(edDocument.root.get().serialize());

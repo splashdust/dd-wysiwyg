@@ -1,0 +1,101 @@
+import { LitElement, html, css, TemplateResult } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { EdElement } from '../editor-elements/ed-element';
+import { edSelection } from '../app';
+
+export interface EdElementOverlay {
+    edElement: EdElement;
+    elementRef: HTMLElement;
+    layout: TemplateResult;
+}
+
+@customElement('ed-edit-layer')
+export class EdEditLayer extends LitElement {
+    @property({ type: Array }) overlays: EdElementOverlay[] = [];
+
+    clear() {
+        this.overlays = [];
+    }
+
+    add(overlay: EdElementOverlay) {
+        this.overlays = [...this.overlays, overlay];
+    }
+
+    buildFromElement(element: EdElement) {
+        if (!element.renderedElement)
+            return;
+
+        this.add({
+            edElement: element,
+            elementRef: element.renderedElement,
+            layout: element.renderEditOverlay(),
+        });
+
+        for (const child of element.children) {
+            this.buildFromElement(child);
+        }
+    }
+
+    render() {
+        return html`
+            ${this.overlays.map(
+                (overlay) => html`
+                    <div
+                        class="overlay"
+                        @click=${() => {
+                            edSelection.set(new WeakRef(overlay.edElement));
+                        }}
+                        style="
+                            top: ${overlay.elementRef.getBoundingClientRect().top}px;
+                            left: ${overlay.elementRef.getBoundingClientRect().left}px;
+                            width: ${overlay.elementRef.getBoundingClientRect().width}px;
+                            height: ${overlay.elementRef.getBoundingClientRect().height}px;
+                        "
+                    >
+                        <div class="tag-name">&lt;${overlay.elementRef.tagName.toLowerCase()}&gt;</div>
+                        ${overlay.layout}
+                    </div>
+                `
+            )}
+        `;
+    }
+
+    static styles = css`
+        :host {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: absolute;
+            box-sizing: border-box;
+            pointer-events: all;
+        }
+
+        .overlay:hover {
+            background: rgba(0, 192, 255, 0.1);
+            border: 1px dashed rgba(0, 192, 255, 0.5);
+        }
+
+        .tag-name {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 128, 192, 1);
+            color: white;
+            padding: 3px 5px;
+            font-size: 10px;
+        }
+
+        .overlay:hover .tag-name {
+            display: block;
+            user-select: none;
+        }
+        .overlay:hover .tag-name:hover {
+            display: none;
+        }
+    `;
+}

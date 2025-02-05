@@ -41,6 +41,22 @@ export class EdToolbar extends LitElement {
         ></gds-icon-arrow-rotate-clockwise>
         Redo
       </gds-button>
+      <gds-spacer style="width:100%"></gds-spacer>
+      <gds-dropdown
+        label="Design version"
+        hide-label
+        size="small"
+        value="2023"
+        @change=${(e: Event) => 
+          this.dispatchEvent(
+            new CustomEvent("ed-design-version",
+              { bubbles: true, detail: { value: (e.target as any).value } }
+            )
+          )
+        }>
+        <gds-option value="2023">2023</gds-option>
+        <gds-option value="2016">2016</gds-option>
+      </gds-dropdown>
     </gds-flex>`;
   }
 }
