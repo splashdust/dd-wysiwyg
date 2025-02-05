@@ -420,10 +420,10 @@
   resolved "https://registry.yarnpkg.com/@sebgroup/fonts/-/fonts-2.0.2.tgz#c8195505b8662c4941821a196be52e669f84f195"
   integrity sha512-J+kj6n7SydcTP+HZOIa6i9PAHLZ+oOuFhQ/C/mxprrNwV0ssIohXVjhezrijRAaGduowCWYOBh7Gbt13MLA8Pw==
 
-"@sebgroup/green-core@^1.63.0":
-  version "1.63.0"
-  resolved "https://registry.yarnpkg.com/@sebgroup/green-core/-/green-core-1.63.0.tgz#cf7bb759007c54b80828e6d7989498391646a14a"
-  integrity sha512-ckDdgvL7CnoSwn4aqxGx1fftq2kCgBQnhc4j1yTBD12/u/xlTYRZVXmL9G49wQyAYLCH4r3edzfbpZf9Nl+VKg==
+"@sebgroup/green-core@^1.64.0":
+  version "1.64.0"
+  resolved "https://registry.yarnpkg.com/@sebgroup/green-core/-/green-core-1.64.0.tgz#be67cf8ecfe313fb7b0374ca38facb2dabc88899"
+  integrity sha512-CMLM5jvQrxEBLiF6jcNLpbIjLewqAlm75zA6htQtlKDPgFnTKB5nCSqc9oOEGF02KjRNerYe3KNaL3CEDv1s5w==
   dependencies:
     "@floating-ui/dom" "^1.6.1"
     "@lit/localize" "^0.12.1"

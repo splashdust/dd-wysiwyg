@@ -73,6 +73,40 @@ export class EdFlexElement extends EdElement {
         <gds-option value="row">Row</gds-option>
         <gds-option value="column">Column</gds-option>
     </gds-dropdown>
+    <gds-dropdown
+        size="small"
+        label="Justify content"
+        value=${this.attributes["justify-content"] || "flex-start"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            "justify-content": e.target.value,
+          };
+        }}>
+        <gds-option value="flex-start">Start</gds-option>
+        <gds-option value="flex-end">End</gds-option>
+        <gds-option value="center">Center</gds-option>
+        <gds-option value="space-between">Space between</gds-option>
+        <gds-option value="space-around">Space around</gds-option>
+        <gds-option value="space-evenly">Space evenly</gds-option>
+    </gds-dropdown>
+    <gds-dropdown
+        size="small"
+        label="Gap"
+        combobox
+        value=${this.attributes["gap"] || "m"}
+        @input=${(e: any) => {
+          this.attributes = {
+            ...this.attributes,
+            gap: e.target.value,
+          };
+        }}>
+        <gds-option value="xs">xs</gds-option>
+        <gds-option value="s">s</gds-option>
+        <gds-option value="m">m</gds-option>
+        <gds-option value="l">l</gds-option>
+        <gds-option value="xl">xl</gds-option>
+    </gds-dropdown>
     <gds-textarea
         label="Attributes"
         id="attributes"

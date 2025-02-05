@@ -13,7 +13,7 @@
     "@hono/node-server": "^1.13.7",
     "@lit-labs/signals": "^0.1.1",
     "@sebgroup/fonts": "^2.0.2",
-    "@sebgroup/green-core": "^1.63.0",
+    "@sebgroup/green-core": "^1.64.0",
     "@shoelace-style/shoelace": "^2.19.1",
     "@vercel/analytics": "^1.4.1",
     "@vercel/functions": "^1.6.0",

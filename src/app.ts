@@ -71,11 +71,13 @@ export class MyApp extends LitElement {
       // Effect on selection change
       effect(() => {
         const selectedElement = edSelection.get()?.deref()?.renderedElement;
-        if (!selectedElement) return;
+
         const highlightedElements = Array.from(
           this.shadowRoot!.querySelectorAll(".highlighted"),
         );
         highlightedElements.forEach((el) => el.classList.remove("highlighted"));
+
+        if (!selectedElement) return;
         selectedElement.classList.add("highlighted");
       });
 
@@ -85,12 +87,16 @@ export class MyApp extends LitElement {
         this.#renderDocument();
       });
     });
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "z" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
         this.#undo();
       }
       if (e.key === "z" && (e.ctrlKey || e.metaKey) && e.shiftKey) {
         this.#redo();
+      }
+      if (e.key === "Escape") {
+        edSelection.set(undefined);
       }
     });
   }
