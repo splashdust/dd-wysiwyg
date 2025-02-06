@@ -6,6 +6,7 @@ import { EdElementData } from "../editor-elements/ed-element";
 import "@sebgroup/green-core/components/icon/icons/bars-three.js";
 import "@sebgroup/green-core/components/icon/icons/text-edit.js";
 import "@sebgroup/green-core/components/icon/icons/images.js";
+import { dragElementData } from "../app";
 
 type Droppable = {
   name: string;
@@ -217,11 +218,14 @@ export class Palette extends LitElement {
                 box-sizing="border-box"
                 draggable="true"
                 cursor="grab"
-                @dragstart=${(e: DragEvent) =>
+                @dragstart=${(e: DragEvent) =>{
+                  dragElementData.data = droppable.elementData;
                   e.dataTransfer?.setData(
                     "application/json",
                     JSON.stringify(droppable.elementData),
-                  )}
+                  );
+                }
+              }
               >
                 <gds-text
                   font-size="detail-xs"

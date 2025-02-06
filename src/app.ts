@@ -38,6 +38,9 @@ _hyperscript.browserInit();
 // TODO: Consolidate these into a single class
 export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
   signal(undefined);
+
+export const dragElementData: { data?: EdElementData } = {};
+
 export const edDocument = {
   stateMeta: {
     shouldAppendHistoryOnNextRender: true,

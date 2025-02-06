@@ -4,7 +4,7 @@ import { signal, computed, Signal } from "@lit-labs/signals";
 
 import type { DropZone } from "../components/drop-layer";
 import { html } from "@sebgroup/green-core/scoping";
-import { edDocument, edSelection } from "../app";
+import { dragElementData, edDocument, edSelection } from "../app";
 import { elementFactory } from "./factory";
 import * as _hyperscript from "hyperscript.org";
 
@@ -128,12 +128,16 @@ export class EdElement implements EdElementData {
   #previewElement?: HTMLElement;
   getOnPreview(index?: number) {
     return (e: DragEvent) => {
-      this.#previewElement = document.createElement("div");
-      this.#previewElement.setAttribute(
-        "style",
-        "opacity: 0.5; padding: 8px; border: 1px dashed #000; text-align: center;",
-      );
-      this.#previewElement.textContent = "– Preview –";
+      const dragData = dragElementData.data;
+
+      if(dragData) {
+        const previewElement = elementFactory(dragData);
+        this.#previewElement = previewElement.render();
+      } else {
+        this.#previewElement = document.createElement("div");
+      }
+
+      this.#previewElement.setAttribute("style", "opacity: 0.5;");
 
       this.hidePlaceholder();
 
