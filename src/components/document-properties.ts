@@ -71,7 +71,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
                 Delete element
                 <gds-icon-trash-can slot="trail"></gds-icon-trash-can>
               </gds-button>
-            `,
+            `
           )}
         </gds-flex>
       </gds-flex>
@@ -91,7 +91,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
   #deleteSelectedElement = () => {
     if (!this.#selectedElement) return;
     const index = this.#selectedElement.parent?.children.indexOf(
-      this.#selectedElement,
+      this.#selectedElement
     );
     if (index !== undefined && index > -1) {
       this.#selectedElement.parent?.children.splice(index, 1);

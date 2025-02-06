@@ -218,14 +218,13 @@ export class Palette extends LitElement {
                 box-sizing="border-box"
                 draggable="true"
                 cursor="grab"
-                @dragstart=${(e: DragEvent) =>{
+                @dragstart=${(e: DragEvent) => {
                   dragElementData.data = droppable.elementData;
                   e.dataTransfer?.setData(
                     "application/json",
-                    JSON.stringify(droppable.elementData),
+                    JSON.stringify(droppable.elementData)
                   );
-                }
-              }
+                }}
               >
                 <gds-text
                   font-size="detail-xs"
@@ -249,7 +248,7 @@ export class Palette extends LitElement {
                   pointer-events="none"
                   >${droppable.template}</gds-flex
                 >
-              </gds-card>`,
+              </gds-card>`
           )}
         </gds-grid>
       </gds-flex>

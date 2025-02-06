@@ -24,7 +24,7 @@ export class DropLayer extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     document.addEventListener("dragstart", () =>
-      requestAnimationFrame(() => (this.isActive = true)),
+      requestAnimationFrame(() => (this.isActive = true))
     );
     document.addEventListener("dragend", () => {
       requestAnimationFrame(() => (this.isActive = false));
@@ -78,18 +78,18 @@ export class DropLayer extends LitElement {
           }}
           style="${this.#positionFromAnchor(
             dz.anchorElement,
-            dz.anchorPosition,
+            dz.anchorPosition
           )}"
         >
           <gds-icon-plus-small></gds-icon-plus-small>
         </div>
-      `,
+      `
     )}`;
   }
 
   #positionFromAnchor(
     anchorElement: HTMLElement,
-    anchorPosition: AnchorPosition,
+    anchorPosition: AnchorPosition
   ) {
     const rect = anchorElement.getBoundingClientRect();
     const { top, left, width, height } = rect;
@@ -146,11 +146,7 @@ export class DropLayer extends LitElement {
       border: 3px dashed rgba(64, 64, 64, 0.8);
       border-radius: 32px;
       pointer-events: all;
-      transition:
-        width 0.2s,
-        height 0.2s,
-        line-height 0.2s,
-        box-shadow 0.2s;
+      transition: width 0.2s, height 0.2s, line-height 0.2s, box-shadow 0.2s;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
     }
 

@@ -18,7 +18,7 @@ export class EdRichTextElement extends EdElement {
         }
       });
       requestAnimationFrame(
-        () => (el.innerHTML = marked.parse(this.text as string) as string),
+        () => (el.innerHTML = marked.parse(this.text as string) as string)
       );
     }
     return el;

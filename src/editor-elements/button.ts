@@ -10,6 +10,7 @@ export class EdButtonElement extends EdElement {
   renderPropertyPanel() {
     return html`
         <gds-input
+        size="small"
             label="Text content"
             value=${this.text}
             @input=${(e: any) => {
@@ -70,7 +71,7 @@ export class EdButtonElement extends EdElement {
             ...this.attributes,
             id: e.target.value,
           };
-      }}></gds-input>
+        }}></gds-input>
       <gds-textarea
         label="Hyperscript"
         value=${this.attributes["_"] || ""}

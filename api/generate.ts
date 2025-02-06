@@ -8,7 +8,7 @@ const openai = new OpenAI();
 
 export default async function handler(
   request: VercelRequest,
-  response: VercelResponse,
+  response: VercelResponse
 ) {
   const body = JSON.parse(request.body);
   console.log(body);
@@ -151,7 +151,7 @@ const InputAttributes = z
     "supporting-text": z.string(),
   })
   .describe(
-    "Supporting text can be used if a fields needs additional clarification, but is not mandatory. This text is displayed below the label.",
+    "Supporting text can be used if a fields needs additional clarification, but is not mandatory. This text is displayed below the label."
   )
   .strict();
 
@@ -168,9 +168,9 @@ const ValidInputChildren = z.lazy(() =>
           .strict(),
       })
       .describe(
-        "Extended supporting text is a slot that can be used to display a 'more information' fold-out box, in addition to the supporting text.",
+        "Extended supporting text is a slot that can be used to display a 'more information' fold-out box, in addition to the supporting text."
       ),
-  ]),
+  ])
 );
 
 const DropdownAttributes = z
@@ -189,13 +189,12 @@ const OptionAttributes = z
 
 const ValidDropdownChildren = z.lazy(() =>
   z.discriminatedUnion("tag", [
-    z
-      .object({
-        tag: z.literal("gds-option"),
-        text: z.string(),
-        attributes: OptionAttributes,
-      }),
-  ]),
+    z.object({
+      tag: z.literal("gds-option"),
+      text: z.string(),
+      attributes: OptionAttributes,
+    }),
+  ])
 );
 
 const FilterChipsAttributes = z
@@ -214,13 +213,12 @@ const FilterChipAttributes = z
 
 const ValidFilterChipChildren = z.lazy(() =>
   z.discriminatedUnion("tag", [
-    z
-      .object({
-        tag: z.literal("gds-filter-chip"),
-        text: z.string(),
-        attributes: FilterChipAttributes,
-      }),
-  ]),
+    z.object({
+      tag: z.literal("gds-filter-chip"),
+      text: z.string(),
+      attributes: FilterChipAttributes,
+    }),
+  ])
 );
 
 const DividerAttributes = z
@@ -261,7 +259,7 @@ const Segment = z.lazy(() =>
     tag: z.literal("gds-segment"),
     text: z.string().nullable().optional(),
     attributes: SegmentAtributes,
-  }),
+  })
 );
 
 const ImgAttributes = z
@@ -340,7 +338,7 @@ const ValidComponents: z.ZodType<any> = z.lazy(() =>
       attributes: FilterChipsAttributes,
       children: z.array(ValidFilterChipChildren).optional(),
     }),
-  ]),
+  ])
 );
 
 const GeneralHTMLElements: z.ZodType<any> = z.lazy(() =>
@@ -350,16 +348,15 @@ const GeneralHTMLElements: z.ZodType<any> = z.lazy(() =>
       attributes: z.object({}).strict(),
       children: z.array(ValidComponents).optional(),
       text: z.string().nullable().optional(),
-    })
-  ]),
+    }),
+  ])
 );
-
 
 const Schema = z.object({
   systemMessage: z
     .string()
     .describe(
-      "A message you can add back to the user, explaining the system's reasoning.",
+      "A message you can add back to the user, explaining the system's reasoning."
     ),
   root: z.union([ValidComponents, GeneralHTMLElements]),
 });

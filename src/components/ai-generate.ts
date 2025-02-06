@@ -42,7 +42,7 @@ export class AiGenerate extends LitElement {
           () =>
             html`<sl-spinner
               style="font-size: 3rem; --indicator-color: #333; --track-color: #bbb;--track-width: 10px;"
-            ></sl-spinner>`,
+            ></sl-spinner>`
         )}
         ${when(
           this._errorMessage.length > 0,
@@ -55,7 +55,7 @@ export class AiGenerate extends LitElement {
               style="align-items:center;gap:.5rem"
               ><gds-icon-circle-x></gds-icon-circle-x> ${this
                 ._errorMessage}</gds-card
-            >`,
+            >`
         )}
         ${when(
           this._systemMessage.length > 0,
@@ -75,7 +75,7 @@ export class AiGenerate extends LitElement {
                 >
               </gds-flex>
               ${this._systemMessage}
-            </gds-card>`,
+            </gds-card>`
         )}
       </gds-flex>
       ${when(
@@ -104,7 +104,7 @@ export class AiGenerate extends LitElement {
                 </span>
               </gds-textarea>
             </form>
-          </gds-flex>`,
+          </gds-flex>`
       )}`;
   }
 

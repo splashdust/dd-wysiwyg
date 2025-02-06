@@ -50,7 +50,7 @@ export const edDocument = {
       tag: "gds-flex",
       attributes: { padding: "m", gap: "m", "flex-direction": "column" },
       children: [],
-    }),
+    })
   ),
 };
 
@@ -66,7 +66,7 @@ export class MyApp extends LitElement {
   private _editLayer!: EdEditLayer;
 
   @state()
-  private _designVersion = '2023';
+  private _designVersion = "2023";
 
   #history: EdElementData[] = [edDocument.root.get().serialize()];
   #historyIndex = 0;
@@ -79,7 +79,7 @@ export class MyApp extends LitElement {
         const selectedElement = edSelection.get()?.deref()?.renderedElement;
 
         const highlightedElements = Array.from(
-          this.shadowRoot!.querySelectorAll(".highlighted"),
+          this.shadowRoot!.querySelectorAll(".highlighted")
         );
         highlightedElements.forEach((el) => el.classList.remove("highlighted"));
 
@@ -214,7 +214,7 @@ export class MyApp extends LitElement {
     ) {
       this.#historyIndex = Math.min(
         this.#history.length - 1,
-        this.#historyIndex + 1,
+        this.#historyIndex + 1
       );
       edDocument.root.set(elementFactory(this.#history[this.#historyIndex]));
       edDocument.stateMeta.shouldAppendHistoryOnNextRender = false;

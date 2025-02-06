@@ -218,7 +218,7 @@ const schema = {
           columns: {
             type: "integer",
             description: "Number of columns in the grid.",
-          }
+          },
         },
         required: ["padding", "margin", "gap", "columns"],
         additionalProperties: false,

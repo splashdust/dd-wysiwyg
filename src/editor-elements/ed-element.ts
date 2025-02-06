@@ -62,7 +62,7 @@ export class EdElement implements EdElementData {
         const child = elementFactory(c);
         child.parent = this;
         return child;
-      }),
+      })
     );
     this.attributes = data.attributes || {};
     this.text = data.text;
@@ -80,7 +80,7 @@ export class EdElement implements EdElementData {
   protected getOnDrop(index?: number) {
     return (e: DragEvent) => {
       const dropData = JSON.parse(
-        e.dataTransfer?.getData("application/json") || "{}",
+        e.dataTransfer?.getData("application/json") || "{}"
       );
 
       if (!dropData.tag) return;
@@ -130,7 +130,7 @@ export class EdElement implements EdElementData {
     return (e: DragEvent) => {
       const dragData = dragElementData.data;
 
-      if(dragData) {
+      if (dragData) {
         const previewElement = elementFactory(dragData);
         this.#previewElement = previewElement.render();
       } else {
@@ -145,7 +145,7 @@ export class EdElement implements EdElementData {
         const insertBefore = this.children[index!];
         insertBefore?.renderedElement?.insertAdjacentElement(
           "beforebegin",
-          this.#previewElement,
+          this.#previewElement
         );
       } else {
         this.renderedElement?.appendChild(this.#previewElement);
@@ -162,7 +162,7 @@ export class EdElement implements EdElementData {
 
   hasPreviewElements(): Boolean {
     return this.children.some(
-      (child) => child.attributes["data-preview"] || child.hasPreviewElements(),
+      (child) => child.attributes["data-preview"] || child.hasPreviewElements()
     );
   }
 
@@ -187,7 +187,7 @@ export class EdElement implements EdElementData {
 
     el.setAttribute(
       "style",
-      "border-radius: 8px;min-height: 40px;border: 1px dashed #ddd; color: #ccc; font-size: 12px;align-items: center; justify-content: center;",
+      "border-radius: 8px;min-height: 40px;border: 1px dashed #ddd; color: #ccc; font-size: 12px;align-items: center; justify-content: center;"
     );
 
     if (!this.#placeholderTextNode) {
@@ -206,7 +206,7 @@ export class EdElement implements EdElementData {
 
   renderPropertyPanel() {
     return html`<gds-input label="Text content" value=${this.text} @input=${(
-      e: any,
+      e: any
     ) => {
       this.text = e.target.value;
     }}></gds-input>

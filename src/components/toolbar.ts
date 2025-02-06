@@ -38,11 +38,18 @@ export class EdToolbar extends LitElement {
         Redo
       </gds-button>
       <gds-spacer style="width:100%"></gds-spacer>
-      <gds-segmented-control size="small" value="edit" @change=${(e: Event) => {
-        this.dispatchEvent(
-          new CustomEvent("ed-mode", { bubbles: true, detail: { value: (e.target as any).value } })
-        );
-      }}>
+      <gds-segmented-control
+        size="small"
+        value="edit"
+        @change=${(e: Event) => {
+          this.dispatchEvent(
+            new CustomEvent("ed-mode", {
+              bubbles: true,
+              detail: { value: (e.target as any).value },
+            })
+          );
+        }}
+      >
         <gds-segment value="edit">Edit</gds-segment>
         <gds-segment value="preview">Preview</gds-segment>
       </gds-segmented-control>
@@ -52,13 +59,14 @@ export class EdToolbar extends LitElement {
         hide-label
         size="small"
         value="2023"
-        @change=${(e: Event) => 
+        @change=${(e: Event) =>
           this.dispatchEvent(
-            new CustomEvent("ed-design-version",
-              { bubbles: true, detail: { value: (e.target as any).value } }
-            )
-          )
-        }>
+            new CustomEvent("ed-design-version", {
+              bubbles: true,
+              detail: { value: (e.target as any).value },
+            })
+          )}
+      >
         <gds-option value="2023">2023</gds-option>
         <gds-option value="2016">2016</gds-option>
       </gds-dropdown>
