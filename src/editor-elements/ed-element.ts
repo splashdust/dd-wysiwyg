@@ -211,14 +211,15 @@ export class EdElement implements EdElementData {
       this.text = e.target.value;
     }}></gds-input>
     <gds-input
-    label="Id"
-    value=${this.attributes["id"] || ""}
-    @input=${(e: any) => {
-      this.attributes = {
-        ...this.attributes,
-        id: e.target.value,
-      };
-    }}></gds-input>
+      size="small"
+      label="Id"
+      value=${this.attributes["id"] || ""}
+      @input=${(e: any) => {
+        this.attributes = {
+          ...this.attributes,
+          id: e.target.value,
+        };
+      }}></gds-input>
     <gds-textarea
       label="Hyperscript"
       value=${this.attributes["_"] || ""}

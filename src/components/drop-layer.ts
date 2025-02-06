@@ -1,5 +1,5 @@
 import { css, html, LitElement } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { EdElement } from "../editor-elements/ed-element";
 
 import "@sebgroup/green-core/components/icon/icons/plus-small.js";
@@ -20,6 +20,9 @@ export class DropLayer extends LitElement {
 
   @property({ type: Boolean, reflect: true })
   isActive = false;
+
+  @state()
+  isPreviewing = false;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -51,40 +54,45 @@ export class DropLayer extends LitElement {
   }
 
   render() {
-    return html` ${this._dropZones.map(
-      (dz) => html`
-        <div
-          @click=${(e: MouseEvent) => {
-            this.isActive = false;
-          }}
-          class="drop-zone ${dz.anchorPosition}"
-          @dragenter=${(e: DragEvent) => {
-            console.log(e.dataTransfer?.getData("application/json"));
-            requestAnimationFrame(() => dz.onDragEnter?.(e));
-            (e.target as HTMLElement)?.classList.add("drag-hover");
-          }}
-          @dragover=${(e: DragEvent) => {
-            e.preventDefault();
-          }}
-          @dragleave=${(e: DragEvent) => {
-            dz.onDragLeave?.(e);
-            (e.target as HTMLElement)?.classList.remove("drag-hover");
-          }}
-          @drop=${(e: DragEvent) => {
-            e.preventDefault();
-            (e.target as HTMLElement)?.classList.remove("drag-hover");
-            dz.onDragLeave?.(e);
-            dz.onDrop(e);
-          }}
-          style="${this.#positionFromAnchor(
-            dz.anchorElement,
-            dz.anchorPosition
-          )}"
-        >
-          <gds-icon-plus-small></gds-icon-plus-small>
-        </div>
-      `
-    )}`;
+    return html`<div class="overlay ${this.isPreviewing ? "previewing" : ""}">
+      ${this._dropZones.map(
+        (dz) => html`
+          <div
+            @click=${(e: MouseEvent) => {
+              this.isActive = false;
+            }}
+            class="drop-zone ${dz.anchorPosition}"
+            @dragenter=${(e: DragEvent) => {
+              console.log(e.dataTransfer?.getData("application/json"));
+              this.isPreviewing = true;
+              requestAnimationFrame(() => dz.onDragEnter?.(e));
+              (e.target as HTMLElement)?.classList.add("drag-hover");
+            }}
+            @dragover=${(e: DragEvent) => {
+              e.preventDefault();
+            }}
+            @dragleave=${(e: DragEvent) => {
+              dz.onDragLeave?.(e);
+              this.isPreviewing = false;
+              (e.target as HTMLElement)?.classList.remove("drag-hover");
+            }}
+            @drop=${(e: DragEvent) => {
+              e.preventDefault();
+              this.isPreviewing = false;
+              (e.target as HTMLElement)?.classList.remove("drag-hover");
+              dz.onDragLeave?.(e);
+              dz.onDrop(e);
+            }}
+            style="${this.#positionFromAnchor(
+              dz.anchorElement,
+              dz.anchorPosition
+            )}"
+          >
+            <gds-icon-plus-small></gds-icon-plus-small>
+          </div>
+        `
+      )}
+    </div>`;
   }
 
   #positionFromAnchor(
@@ -125,13 +133,21 @@ export class DropLayer extends LitElement {
       pointer-events: none;
       opacity: 0;
       display: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, display 0.2s;
+      transition-behavior: allow-discrete;
     }
 
     :host([isActive]) {
       pointer-events: all;
       opacity: 1;
       display: block;
+    }
+
+    .overlay {
+      transition: opacity 0.2s;
+    }
+    .previewing {
+      opacity: 0.25;
     }
 
     .drop-zone {

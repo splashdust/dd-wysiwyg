@@ -9,15 +9,15 @@ export class EdButtonElement extends EdElement {
 
   renderPropertyPanel() {
     return html`
-        <gds-input
+      <gds-input
         size="small"
-            label="Text content"
-            value=${this.text}
-            @input=${(e: any) => {
-              this.text = e.target.value;
-            }}
-        /></gds-input>
-        <gds-dropdown
+        label="Text content"
+        value=${this.text}
+        @input=${(e: any) => {
+          this.text = e.target.value;
+        }}
+      /></gds-input>
+      <gds-dropdown
         size="small"
         label="Rank"
         value=${this.attributes["rank"] || "primary"}
@@ -65,6 +65,7 @@ export class EdButtonElement extends EdElement {
       </gds-dropdown>
       <gds-input
         label="Id"
+        size="small"
         value=${this.attributes["id"] || ""}
         @input=${(e: any) => {
           this.attributes = {
@@ -81,6 +82,6 @@ export class EdButtonElement extends EdElement {
             _: e.target.value,
           };
         }}
-        ></gds-textarea>`;
+      ></gds-textarea>`;
   }
 }

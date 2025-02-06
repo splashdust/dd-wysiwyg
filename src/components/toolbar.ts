@@ -39,6 +39,7 @@ export class EdToolbar extends LitElement {
       </gds-button>
       <gds-spacer style="width:100%"></gds-spacer>
       <gds-segmented-control
+        style="min-width: 200px"
         size="small"
         value="edit"
         @change=${(e: Event) => {
@@ -51,10 +52,11 @@ export class EdToolbar extends LitElement {
         }}
       >
         <gds-segment value="edit">Edit</gds-segment>
-        <gds-segment value="preview">Preview</gds-segment>
+        <gds-segment value="preview">Interact</gds-segment>
       </gds-segmented-control>
       <gds-spacer style="width:100%"></gds-spacer>
       <gds-dropdown
+        style="min-width: 100px"
         label="Design version"
         hide-label
         size="small"

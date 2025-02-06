@@ -60,7 +60,9 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
                 </gds-badge>
               </gds-card>
 
-              ${this.#selectedElement?.renderPropertyPanel()}
+              <gds-flex flex-direction="column" gap="2xs">
+                ${this.#selectedElement?.renderPropertyPanel()}
+              </gds-flex>
 
               <gds-divider color="primary"></gds-divider>
 
@@ -77,16 +79,6 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
       </gds-flex>
     `;
   }
-
-  #updateSelectedElementAttributes = () => {
-    if (!this.#selectedElement) return;
-    try {
-      const changedAttributes = JSON.parse(this._attributes.value || "{}");
-      this.#selectedElement.attributes = changedAttributes;
-    } catch (e) {
-      // ignore
-    }
-  };
 
   #deleteSelectedElement = () => {
     if (!this.#selectedElement) return;
