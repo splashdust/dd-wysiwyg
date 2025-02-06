@@ -37,6 +37,7 @@ export class EdToolbar extends LitElement {
         ></gds-icon-arrow-rotate-clockwise>
         Redo
       </gds-button>
+      <gds-spacer style="width:100%"></gds-spacer>
       <gds-segmented-control size="small" value="edit" @change=${(e: Event) => {
         this.dispatchEvent(
           new CustomEvent("ed-mode", { bubbles: true, detail: { value: (e.target as any).value } })
@@ -45,6 +46,7 @@ export class EdToolbar extends LitElement {
         <gds-segment value="edit">Edit</gds-segment>
         <gds-segment value="preview">Preview</gds-segment>
       </gds-segmented-control>
+      <gds-spacer style="width:100%"></gds-spacer>
       <gds-dropdown
         label="Design version"
         hide-label
