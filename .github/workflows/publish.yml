@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Build
-        run: yarn build
+        run: DEPLOY_TARGET=github yarn build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
