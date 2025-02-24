@@ -7,7 +7,7 @@ import { elementFactory } from "./factory";
 
 export class EdFlexElement extends EdElement {
   constructor(data: Partial<EdElementData>) {
-    super({ ...data, tag: "gds-flex" });
+    super({ tag: "gds-flex", ...data });
   }
 
   getDropZones() {

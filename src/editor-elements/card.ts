@@ -3,40 +3,25 @@ import { EdElement, EdElementData } from "./ed-element";
 import { DropZone } from "../components/drop-layer";
 import { elementFactory } from "./factory";
 import { html } from "@sebgroup/green-core/scoping";
+import { EdFlexElement } from "./flex";
 
-export class EdCardElement extends EdElement {
+export class EdCardElement extends EdFlexElement {
   constructor(data: Partial<EdElementData>) {
     super({ ...data, tag: "gds-card" });
-  }
-
-  getDropZones() {
-    const dropZones: DropZone[] = [];
-
-    if (!this.renderedElement) return dropZones;
-
-    dropZones.push({
-      anchorElement: this.renderedElement,
-      anchorPosition: "top",
-      onDrop: this.getOnDrop(0),
-      onDragEnter: this.getOnPreview(0),
-      onDragLeave: this.getOnDragLeave(0),
-    });
-
-    dropZones.push({
-      anchorElement: this.renderedElement,
-      anchorPosition: "bottom",
-      onDrop: this.getOnDrop(),
-      onDragEnter: this.getOnPreview(),
-      onDragLeave: this.getOnDragLeave(),
-    });
-
-    return dropZones;
+    this.attributes = {
+      "flex-direction": "column",
+      ...this.attributes,
+    };
   }
 
   render() {
     const el = super.render();
     this.showPlaceholder();
     return el;
+  }
+
+  get placeholderText() {
+    return `gds-card — ${this.attributes["flex-direction"] || "row"} — empty`;
   }
 
   renderPropertyPanel() {
