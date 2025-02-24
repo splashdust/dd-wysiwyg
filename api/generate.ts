@@ -35,15 +35,16 @@ export default async function handler(
           - Avoid modifying the current document outside of the user's request.
           - If the user asks a question which is not translatable to a layout, you can respond in the systemMessage field and leave the document as is.
 
-          Here is the current state of the document:
-          ${JSON.stringify(body.currentDocument)}
-
           Please follow the instructions and generate an optimal layout based on the users request.
           `,
       },
       {
         role: "user",
-        content: body.message,
+        content: `${body.message}
+        
+        Here is the current state of the document:
+        ${JSON.stringify(body.currentDocument)}
+        `,
       },
     ],
     response_format: zodResponseFormat(schema, "green-schema"),

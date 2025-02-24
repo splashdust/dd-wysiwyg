@@ -11,8 +11,7 @@ export class EdToolbar extends LitElement {
     return html`<gds-flex
       gap="m"
       padding="m"
-      border="0 0 4xs 0"
-      border-color="primary"
+      border-width="0 0 4xs 0"
       background="primary"
       height="75px"
       align-items="center"

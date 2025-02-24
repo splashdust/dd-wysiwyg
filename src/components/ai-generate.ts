@@ -83,7 +83,7 @@ export class AiGenerate extends LitElement {
         () =>
           html`<gds-flex
             flex="0 1 100px"
-            border="4xs 0 0 0"
+            border-width="4xs 0 0 0"
             border-color="primary"
             padding="m"
             background="primary"

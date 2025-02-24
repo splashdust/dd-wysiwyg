@@ -202,7 +202,8 @@ export class Palette extends LitElement {
           gap="m"
           padding="m"
           box-sizing="border-box"
-          border="4xs 0 4xs 0"
+          border-width="4xs 0 4xs 0"
+          border-style="solid"
           border-color="primary"
         >
           ${this._droppables.map(
@@ -210,6 +211,7 @@ export class Palette extends LitElement {
               html`<gds-card
                 style="aspect-ratio: 3/2"
                 padding="0"
+                gap="0"
                 variant="secondary"
                 max-width="125px"
                 border-radius="xs"

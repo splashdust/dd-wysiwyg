@@ -39,7 +39,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
         </gds-flex>
         <gds-flex
           max-height="40vh"
-          border="4xs 0"
+          border-width="4xs 0"
           border-color="primary"
           style="overflow: auto"
           flex-direction="column"

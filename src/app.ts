@@ -112,8 +112,7 @@ export class MyApp extends LitElement {
       ><gds-flex width="100%" height="100%">
         <gds-flex
           flex="0 0 300px"
-          border="0 4xs 0 0"
-          border-color="primary"
+          border-width="0 4xs 0 0"
           flex-direction="column"
           align-items="stretch"
           background="primary"
@@ -151,8 +150,7 @@ export class MyApp extends LitElement {
         </gds-flex>
         <gds-flex
           flex="0 0 300px"
-          border="0 0 0 4xs"
-          border-color="primary"
+          border-width="0 0 0 4xs"
           flex-direction="column"
           gap="m"
           background="primary"
