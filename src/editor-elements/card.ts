@@ -16,6 +16,14 @@ export class EdCardElement extends EdElement {
 
     dropZones.push({
       anchorElement: this.renderedElement,
+      anchorPosition: "top",
+      onDrop: this.getOnDrop(0),
+      onDragEnter: this.getOnPreview(0),
+      onDragLeave: this.getOnDragLeave(0),
+    });
+
+    dropZones.push({
+      anchorElement: this.renderedElement,
       anchorPosition: "bottom",
       onDrop: this.getOnDrop(),
       onDragEnter: this.getOnPreview(),
