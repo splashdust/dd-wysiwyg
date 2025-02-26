@@ -92,9 +92,19 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
   };
 
   #renderPropertyTree(el: EdElement): TemplateResult {
+    // Recursively check if a child is selected
+    const hasSelectedChild = (el: EdElement): boolean => {
+      if (el === this.#selectedElement) return true;
+      for (const child of el.children) {
+        if (hasSelectedChild(child)) return true;
+      }
+      return false;
+    };
+
     return html`<sl-tree-item
       type="folder"
-      .expanded=${el.children.length < 4 ? true : false}
+      .expanded=${hasSelectedChild(el) || el.children.length < 4 ? true : false}
+      .selected=${el === this.#selectedElement}
       @click=${(e: Event) => {
         if (e.currentTarget !== e.target) return;
         edSelection.set(new WeakRef(el));
