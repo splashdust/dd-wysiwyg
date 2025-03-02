@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { EdElement } from "../editor-elements/ed-element";
-import { dragElementData, edSelection } from "../app";
+import { dragElementData, edSelection, IsDragging } from "../app";
 
 export interface EdElementOverlay {
   edElement: EdElement;
@@ -76,6 +76,7 @@ export class EdEditLayer extends LitElement {
               }
               const elementData = el.serialize();
               dragElementData.data = elementData;
+              requestAnimationFrame(() => IsDragging.set(true));
               e.dataTransfer?.setData(
                 "application/json",
                 JSON.stringify(elementData)
@@ -91,6 +92,7 @@ export class EdEditLayer extends LitElement {
                   this.#draggedElement.index
                 );
                 this.#draggedElement = undefined;
+                requestAnimationFrame(() => IsDragging.set(false));
               }
             }}
             style="

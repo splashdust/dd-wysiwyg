@@ -6,7 +6,7 @@ import { EdElementData } from "../editor-elements/ed-element";
 import "@sebgroup/green-core/components/icon/icons/bars-three.js";
 import "@sebgroup/green-core/components/icon/icons/text-edit.js";
 import "@sebgroup/green-core/components/icon/icons/images.js";
-import { dragElementData } from "../app";
+import { dragElementData, IsDragging } from "../app";
 
 type Droppable = {
   name: string;
@@ -226,6 +226,10 @@ export class Palette extends LitElement {
                     "application/json",
                     JSON.stringify(droppable.elementData)
                   );
+                  requestAnimationFrame(() => IsDragging.set(true));
+                }}
+                @dragend=${() => {
+                  requestAnimationFrame(() => IsDragging.set(false));
                 }}
               >
                 <gds-text

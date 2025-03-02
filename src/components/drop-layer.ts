@@ -3,6 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { EdElement } from "../editor-elements/ed-element";
 
 import "@sebgroup/green-core/components/icon/icons/plus-small.js";
+import { effect } from "signal-utils/subtle/microtask-effect";
+import { IsDragging } from "../app";
 
 type AnchorPosition = "top" | "bottom" | "left" | "right";
 
@@ -26,12 +28,8 @@ export class DropLayer extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    document.addEventListener("dragstart", () =>
-      requestAnimationFrame(() => (this.isActive = true))
-    );
-    document.addEventListener("dragend", () => {
-      requestAnimationFrame(() => (this.isActive = false));
-      document.dispatchEvent(new Event("tree-updated"));
+    effect(() => {
+      this.isActive = IsDragging.get();
     });
   }
 
@@ -60,6 +58,7 @@ export class DropLayer extends LitElement {
           <div
             @click=${(e: MouseEvent) => {
               this.isActive = false;
+              requestAnimationFrame(() => IsDragging.set(false));
             }}
             class="drop-zone ${dz.anchorPosition}"
             @dragenter=${(e: DragEvent) => {
@@ -82,6 +81,7 @@ export class DropLayer extends LitElement {
               (e.target as HTMLElement)?.classList.remove("drag-hover");
               dz.onDragLeave?.(e);
               dz.onDrop(e);
+              requestAnimationFrame(() => IsDragging.set(false));
             }}
             style="${this.#positionFromAnchor(
               dz.anchorElement,

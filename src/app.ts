@@ -41,6 +41,8 @@ export const edSelection: Signal.State<WeakRef<EdElement> | undefined> =
 
 export const dragElementData: { data?: EdElementData } = {};
 
+export const IsDragging = signal(false);
+
 export const edDocument = {
   stateMeta: {
     shouldAppendHistoryOnNextRender: true,
