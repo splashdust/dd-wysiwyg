@@ -141,7 +141,7 @@ export class EdElement implements EdElementData {
 
       this.hidePlaceholder();
 
-      if (Number.isInteger(index)) {
+      if (Number.isInteger(index) && this.children.length > 0) {
         const insertBefore = this.children[index!];
         insertBefore?.renderedElement?.insertAdjacentElement(
           "beforebegin",
