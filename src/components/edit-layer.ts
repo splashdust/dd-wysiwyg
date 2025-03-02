@@ -64,7 +64,9 @@ export class EdEditLayer extends LitElement {
               const el = overlay.edElement;
               const index = el.parent?.children.indexOf(el);
               if (index !== undefined && index > -1) {
-                el.parent?.children.splice(index, 1);
+                requestAnimationFrame(() =>
+                  el.parent?.children.splice(index, 1)
+                );
                 edSelection.set(undefined);
                 this.#draggedElement = {
                   el,
