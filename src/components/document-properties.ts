@@ -24,7 +24,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
 
   render() {
     return html`
-      <gds-flex flex-direction="column" align-items="stretch">
+      <gds-flex flex-direction="column" align-items="stretch" max-height="100%">
         <gds-flex height="74px" flex-direction="column">
           <gds-text
             tag="h3"
@@ -41,7 +41,7 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
           max-height="40vh"
           border-width="4xs 0"
           border-color="primary"
-          style="overflow: auto"
+          overflow="auto"
           flex-direction="column"
           background="secondary"
         >
@@ -49,16 +49,17 @@ export class DocumentProperties extends SignalWatcher(LitElement) {
             ${this.#renderPropertyTree(edDocument.root.get())}
           </sl-tree>
         </gds-flex>
-        <gds-flex padding="m" flex-direction="column" gap="m">
+        <gds-flex padding="m" flex-direction="column" gap="m" overflow="auto">
           ${when(
             this.#selectedElement !== undefined,
             () => html`
-              <gds-card padding="s">
-                Selected:
-                <gds-badge>
-                  <pre>&lt;${this.#selectedElement?.tag}&gt;</pre>
-                </gds-badge>
-              </gds-card>
+              <gds-text text-align="center" font-size="detail-m">
+                <pre style="margin:0">
+&lt;${this.#selectedElement?.tag}&gt;</pre
+                >
+              </gds-text>
+
+              <gds-divider color="primary"></gds-divider>
 
               <gds-flex flex-direction="column" gap="2xs">
                 ${this.#selectedElement?.renderPropertyPanel()}

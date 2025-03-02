@@ -121,7 +121,7 @@ export class MyApp extends LitElement {
           gap="m"
         >
           <document-properties
-            style="position:fixed;width:299px"
+            style="position:fixed;width:299px;height:100vh;overflow:hidden"
           ></document-properties>
         </gds-flex>
         <gds-flex flex="0 1 100%" flex-direction="column">
