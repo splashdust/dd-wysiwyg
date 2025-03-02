@@ -11,7 +11,7 @@ import { dragElementData, IsDragging } from "../app";
 type Droppable = {
   name: string;
   elementData: EdElementData;
-  template: TemplateResult;
+  cardTemplate: TemplateResult;
 };
 
 @customElement("ed-palette")
@@ -28,7 +28,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-icon-bars-three
+      cardTemplate: html`<gds-icon-bars-three
         style="line-height: 1.75rem; transform: rotate(90deg)"
       ></gds-icon-bars-three>`,
     },
@@ -42,7 +42,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-icon-bars-three
+      cardTemplate: html`<gds-icon-bars-three
         style="line-height: 1.75rem;"
       ></gds-icon-bars-three>`,
     },
@@ -55,7 +55,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-input
+      cardTemplate: html`<gds-input
         style="zoom:0.5"
         label="Input field"
         size="small"
@@ -70,7 +70,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-textarea
+      cardTemplate: html`<gds-textarea
         style="zoom:0.5"
         label="Textarea"
         size="small"
@@ -84,7 +84,7 @@ export class Palette extends LitElement {
         attributes: {},
         children: [],
       },
-      template: html`<gds-button size="xs">Button</gds-button>`,
+      cardTemplate: html`<gds-button size="xs">Button</gds-button>`,
     },
     {
       name: "Card",
@@ -95,7 +95,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-card padding="xs">Card</gds-card>`,
+      cardTemplate: html`<gds-card padding="xs">Card</gds-card>`,
     },
     {
       name: "Text",
@@ -107,7 +107,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`Text`,
+      cardTemplate: html`Text`,
     },
     {
       name: "RichText",
@@ -116,7 +116,7 @@ export class Palette extends LitElement {
         attributes: {},
         children: [],
       },
-      template: html`<gds-icon-text-edit
+      cardTemplate: html`<gds-icon-text-edit
         style="line-height: 1.75rem;"
       ></gds-icon-text-edit>`,
     },
@@ -129,7 +129,11 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-flex flex-direction="column" width="100%" padding="m">
+      cardTemplate: html`<gds-flex
+        flex-direction="column"
+        width="100%"
+        padding="m"
+      >
         <gds-divider color="primary"></gds-divider>
       </gds-flex>`,
     },
@@ -142,7 +146,7 @@ export class Palette extends LitElement {
         },
         children: [],
       },
-      template: html`<gds-icon-images
+      cardTemplate: html`<gds-icon-images
         style="line-height: 1.75rem;"
       ></gds-icon-images>`,
     },
@@ -172,7 +176,7 @@ export class Palette extends LitElement {
           },
         ],
       },
-      template: html`<gds-flex style="zoom:0.5" flex-direction="column">
+      cardTemplate: html`<gds-flex style="zoom:0.5" flex-direction="column">
         <gds-segmented-control>
           <gds-segment>Seg 1</gds-segment>
           <gds-segment selected>Seg 2</gds-segment>
@@ -252,7 +256,7 @@ export class Palette extends LitElement {
                   justify-content="center"
                   flex-direction="column"
                   pointer-events="none"
-                  >${droppable.template}</gds-flex
+                  >${droppable.cardTemplate}</gds-flex
                 >
               </gds-card>`
           )}
